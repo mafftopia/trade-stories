@@ -1,0 +1,11 @@
+{
+  "name": "trade-stories",
+  "description": "Skills and agents for writing, verifying and linting Trade Stories.",
+  "version": "0.1.0",
+  "author": { "name": "maff" },
+  "skills": "./.claude/skills",
+  "agents": [
+    "./.claude/agents/story-writer.md",
+    "./.claude/agents/new-story-reviewer.md"
+  ]
+}

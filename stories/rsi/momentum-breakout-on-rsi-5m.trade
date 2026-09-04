@@ -1,0 +1,12 @@
+Story       Momentum breakout on RSI 5m
+Trading     btcusd, 5m
+Source      RSI 14
+
+  Given     any market regime
+  When      RSI 14 crosses above 60
+  And       price breaks above previous day's high
+  Then      enter long
+  With      500 USD margin, 10x leverage
+  SL        3% of entry price
+  Until     2R multiple of the stop
+  Taking    100%, closing the trade

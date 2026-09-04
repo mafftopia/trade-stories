@@ -1,0 +1,719 @@
+[
+  {
+    "name": "canonical layout",
+    "expect": "ok",
+    "story": "Story       EMA Trend & RVI Volatility\nTrading     BTC/USD 4H chart\n\n  Given     price regime on 1D, 2D and 1W charts are all ranging\n  When      the 21EMA crosses above the 55EMA\n  And       RVI drops below 20\n  Except    if D1 stochastic on 4H chart is above oversold\n  Then      Go Long\n  With      equity 500\n  SL        3%\n  Until     RVI >= 75\n  Taking    100% - close the position\n  Or Until  10% profit\n  Taking    100% - close the position\n  Unless    RVI downward for more than 2 bars\n\nNotes:\n  RVI is Relative Volatility Index\n"
+  },
+  {
+    "name": "messy but valid layout",
+    "expect": "ok",
+    "story": "Story EMA Trend & RVI Volatility\nTrading BTC/USD 4H chart\n\n  Given price regime on 1D, 2D and 1W charts are all ranging\n     given some ranging criteria or other\n  When the 21EMA crosses above the 55EMA\n  Then Go Long\n  With 100 usdt\n  SL    3%\n  Until RVI >= 75\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "no uber-block indent",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "block form with text on the keyword line",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL     3%\nUntil  price has risen:\n            10% (TP1)\n            20% (TP2)\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "block form with keyword alone",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil\n            price has risen:\n            10% (TP1)\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "continuation opening with and",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven the trend is up\n            and price is above the 200 EMA\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "continuation opening with or until",
+    "expect": "ok",
+    "hintContains": "continuation text of \"Until\"",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil RVI >= 75\n            or  until price has risen 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "blank lines everywhere",
+    "expect": "ok",
+    "story": "\n\nStory x\n\n\nTrading BTC/USD 4H\n\nGiven ranging\n\nWhen cross up\n\nThen Go Long\nWith 100 usdt\n\nSL    3%\nUntil 10%\nTaking 100% - close the position\n\n\n"
+  },
+  {
+    "name": "whitespace-only line inside a block",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil price has risen:\n            10% (TP1)\n   \n            20% (TP2)\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Notes swallows keyword-initial prose",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\nNotes:\nOr so I assumed\nGiven that the trend held\nStory  a fragment of another story entirely\n"
+  },
+  {
+    "name": "Notes on one line",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\nNotes RVI is Relative Volatility Index\n"
+  },
+  {
+    "name": "all lower case",
+    "expect": "ok",
+    "story": "story x\ntrading BTC/USD 4H\ngiven ranging\nwhen cross up\nthen Go Long\nwith 100 usdt\nsl    3%\nuntil 10%\ntaking 100% - close the position\n"
+  },
+  {
+    "name": "And after a clause that does not stack",
+    "expect": "error",
+    "contains": "\"And\" must follow a \"Given\", \"When\", \"Then\" or \"Source\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nAnd rsi low\nSL 3%\nAnd volume rising\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "And after Unless",
+    "expect": "error",
+    "contains": "\"And\" must follow a \"Given\", \"When\", \"Then\" or \"Source\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nUnless x\nAnd y\n"
+  },
+  {
+    "name": "Until Taking then Or Until Taking",
+    "expect": "ok",
+    "workingContains": "Until       TP1 10%, TP2 20%\nTaking      40% at TP1, 60% at TP2\nOr Until    ema slowed\nTaking      60% then trailing stop\nOr Until    some other condition",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil TP1 10%, TP2 20%\nTaking 40% at TP1, 60% at TP2\nOr Until ema slowed\nTaking 60% then trailing stop\nOr   Until some other condition\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "an Until with no Taking",
+    "expect": "error",
+    "contains": "\"Until\" must be followed by a \"Taking\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\n"
+  },
+  {
+    "name": "an Or Until with no Taking",
+    "expect": "error",
+    "contains": "\"Or Until\" must be followed by a \"Taking\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 50%, then a trailing stop\nOr Until ema slowed\n"
+  },
+  {
+    "name": "Except may sit anywhere among the setup keywords",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nExcept D1 stochastic is overbought\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "SL before the setup keywords",
+    "expect": "error",
+    "contains": "\"Given\" must come before \"SL\".",
+    "story": "Story x\nTrading BTC/USD 4H\nSL 3%\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Unless before the exit pairs is not an error",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUnless momentum stalls\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "SL between an exit and its Taking",
+    "expect": "error",
+    "contains": "\"Until\" must be followed by a \"Taking\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nSL 3%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a Taking default completes an unpaired exit",
+    "expect": "ok",
+    "defaults": "Taking 100% - close the position\n",
+    "mergedHas": [
+      {
+        "keyword": "taking",
+        "predicate": "100% - close the position",
+        "source": "defaults"
+      }
+    ],
+    "workingContains": "Until       TP1\nTaking      50%\nUntil       TP2\nTaking      100% - close the position",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil TP1\nTaking 50%\nUntil TP2\n"
+  },
+  {
+    "name": "stacked Untils keep their Takings",
+    "expect": "ok",
+    "workingContains": "Until       TP1\nTaking      50%\nUntil       TP2\nTaking      50%",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil TP1\nTaking 50%\nUntil TP2\nTaking 50%\n"
+  },
+  {
+    "name": "no trailing newline is tolerated",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position"
+  },
+  {
+    "name": "tab in indentation",
+    "expect": "error",
+    "contains": "Tabs are not allowed",
+    "story": "Story x\nTrading BTC/USD 4H\n\tGiven ranging\n"
+  },
+  {
+    "name": "tab in clause text",
+    "expect": "error",
+    "contains": "Tabs are not allowed",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\tand trending\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "tab inside Notes",
+    "expect": "error",
+    "contains": "Tabs are not allowed",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\nNotes:\n\ta tabbed note\n"
+  },
+  {
+    "name": "Taking- is not a keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price rises\nTaking- 50% for TP1 then 50% for TP2\n"
+  },
+  {
+    "name": "Taking; is not a keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price rises\nTaking; 50%\n"
+  },
+  {
+    "name": "Taking... is not a keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price rises\nTaking... 50%\n"
+  },
+  {
+    "name": "takingall is not a keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price rises\nTaking 100% - close the position\ntakingall\n"
+  },
+  {
+    "name": "taking100% is not a keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price rises\nTaking 100% - close the position\ntaking100%\n"
+  },
+  {
+    "name": "unknown keyword",
+    "expect": "error",
+    "contains": "not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWibble something\n"
+  },
+  {
+    "name": "missing required clause",
+    "expect": "error",
+    "contains": "\"Until\" clause is missing",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\n"
+  },
+  {
+    "name": "empty required clause",
+    "expect": "error",
+    "contains": "\"Given\" clause is empty",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "keywords stack by repeating and by And",
+    "expect": "ok",
+    "workingContains": "Given       a\nGiven       b\nWhen        cross up\nWhen        rsi low\nWhen        volume rising\nThen        Go Long\nThen        alert\nWith        100 usdt\nSL          3%\nUntil       10%\nTaking      100% - close the position\nUnless      x\nOr Unless   y",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven a\nAnd b\nWhen cross up\nAnd rsi low\nAnd volume rising\nThen Go Long\nAnd alert\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nUnless x\nOr Unless y\n"
+  },
+  {
+    "name": "a repeat away from its own kind",
+    "expect": "error",
+    "contains": "\"Given\" must come before \"When\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven a\nWhen cross up\nGiven b\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "wrong order, Given after When",
+    "expect": "error",
+    "contains": "must come before",
+    "story": "Story x\nTrading BTC/USD 4H\nWhen cross up\nGiven ranging\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Or Until before Until",
+    "expect": "error",
+    "contains": "\"Or Until\" must come after \"Until\"",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nOr Until 10% profit\nTaking   100% - close the position\nUntil 20%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "stacked Unless by repeating and by Or Unless",
+    "expect": "ok",
+    "workingContains": "Unless      x\nOr Unless   y\nOr Unless   z",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nUnless x\nOr Unless y\nOr   Unless z\n"
+  },
+  {
+    "name": "Or Unless before Unless",
+    "expect": "error",
+    "contains": "\"Or Unless\" must come after \"Unless\"",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nOr Unless y\nUnless x\n"
+  },
+  {
+    "name": "stacked Except by repeating and by Or Except",
+    "expect": "ok",
+    "workingContains": "Except      a\nOr Except   b\nOr Except   c\nThen        Go Long",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nExcept a\nOr Except b\nOr   Except c\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a repeat between two Or Excepts",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nExcept a\nOr Except b\nExcept c\nOr Except d\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Or Except before Except",
+    "expect": "error",
+    "contains": "\"Or Except\" must come after \"Except\"",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nOr Except b\nExcept a\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Taking without a preceding exit",
+    "expect": "error",
+    "contains": "\"Taking\" must follow",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nTaking 50%\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Story takes a continuation line",
+    "expect": "ok",
+    "mergedHas": [
+      { "keyword": "story", "predicate": "a long name\ncontinuing here" }
+    ],
+    "story": "Story a long name\n            continuing here\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "head clauses in columns of their own",
+    "expect": "ok",
+    "story": "Story x\n   Trading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a clause indented past its neighbour becomes continuation text",
+    "expect": "error",
+    "contains": "\"When\" clause is missing",
+    "hintContains": "continuation text of \"Given\"",
+    "hintLine": 4,
+    "story": "Story x\nTrading BTC/USD 4H\n  Given ranging\n            When cross up\n  Then Go Long\n  Until 10%\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "body clauses left of the head clauses",
+    "expect": "ok",
+    "story": "  Story x\n  Trading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "misspelled keyword after a blank line is not blamed on Trading",
+    "expect": "error",
+    "contains": "\"GivenX\" not recognised",
+    "story": "Story x\nTrading BTC/USD 4H\n\n  GivenX any price regime\n  When cross up\n  Then Go Long\n  Until 10%\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "Notes reaches the merged story",
+    "expect": "ok",
+    "mergedHas": [
+      {
+        "keyword": "notes",
+        "predicate": "  RVI is Relative Volatility Index\n",
+        "source": "story"
+      }
+    ],
+    "workingContains": "Notes\n  RVI is Relative Volatility Index",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n\nNotes:\n  RVI is Relative Volatility Index\n"
+  },
+  {
+    "name": "an empty Notes is absent from the merged story",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n\nNotes:\n"
+  },
+  {
+    "name": "a default supplies a clause the story omits",
+    "expect": "ok",
+    "defaults": "SL 3% of start price\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of start price",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a default satisfies a required clause",
+    "expect": "ok",
+    "defaults": "Given any price regime\n",
+    "mergedHas": [
+      {
+        "keyword": "given",
+        "predicate": "any price regime",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a TBD predicate is an error",
+    "expect": "error",
+    "contains": "\"Until\" clause is still TBD.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil TBD\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "TBD inside other text is left to step 2",
+    "expect": "ok",
+    "story": "Story x\nTrading BTC/USD, timeframe TBD\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "TBD alone on a continuation line is an error",
+    "expect": "error",
+    "contains": "\"Until\" clause is still TBD.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil price has risen:\n            TBD\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a blank optional clause is undecided",
+    "expect": "error",
+    "contains": "\"Unless\" clause is undecided.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nUnless\n"
+  },
+  {
+    "name": "a blank required clause reports the emptier message alone",
+    "expect": "error",
+    "contains": "\"Given\" clause is empty, and defaults.trade has no default for it.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a missing SL is an error",
+    "expect": "error",
+    "contains": "\"SL\" clause is missing.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a default satisfies SL",
+    "expect": "ok",
+    "defaults": "SL 3% of start price\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of start price",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "the story beats the default",
+    "expect": "ok",
+    "defaults": "SL 3% of start price\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "5%",
+        "source": "story"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 5%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a default fills an empty clause",
+    "expect": "ok",
+    "defaults": "SL 3% of start price\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of start price",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "blank lines and any order in the defaults file",
+    "expect": "ok",
+    "defaults": "\nUntil price has risen 10%\n\nTaking 100% - close the position\n\nSL 3% of start price\n\n",
+    "mergedHas": [
+      {
+        "keyword": "until",
+        "predicate": "price has risen 10%",
+        "source": "defaults"
+      },
+      {
+        "keyword": "taking",
+        "predicate": "100% - close the position",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\n"
+  },
+  {
+    "name": "a required clause missing from story and defaults alike",
+    "expect": "error",
+    "contains": "\"Until\" clause is missing",
+    "defaults": "SL 3% of start price\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\n"
+  },
+  {
+    "name": "unknown keyword in the defaults file",
+    "expect": "error",
+    "contains": "is not a clause keyword",
+    "defaults": "Wibble something\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a default is a clause, not a key=value pair",
+    "expect": "ok",
+    "defaults": "SL 3% of start price\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of start price",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a block-form default keeps its continuation lines",
+    "expect": "ok",
+    "defaults": "SL          3% of start price\n            moved to entry once 2% in profit\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of start price\nmoved to entry once 2% in profit",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "an AND stack default keeps every clause",
+    "expect": "ok",
+    "defaults": "Given ranging\nAnd trending\n",
+    "mergedHas": [
+      { "keyword": "given", "predicate": "ranging", "source": "defaults" },
+      { "keyword": "given", "predicate": "trending", "source": "defaults" }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "And with nothing above it in the defaults",
+    "expect": "error",
+    "contains": "\"And\" must follow a \"Given\", \"When\", \"Then\" or \"Source\".",
+    "defaults": "And trending\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "the story's own stack beats an AND stack default",
+    "expect": "ok",
+    "defaults": "Given ranging\nAnd trending\n",
+    "mergedHas": [
+      { "keyword": "given", "predicate": "quiet session", "source": "story" }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven quiet session\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "an Or Unless default joins the story's own stack",
+    "expect": "ok",
+    "workingContains": "Unless      momentum stalls\nOr Unless   the session closes",
+    "defaults": "Or Unless the session closes\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nUnless momentum stalls\n"
+  },
+  {
+    "name": "an alternate with no stack to join is left to verify",
+    "expect": "error",
+    "contains": "\"Or Unless\" must come after \"Unless\".",
+    "defaults": "Or Unless the session closes\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a complement pair default is used where the story closes nothing",
+    "expect": "ok",
+    "defaults": "Until price has risen 10%\nTaking 100% - close the position\n",
+    "mergedHas": [
+      { "keyword": "until", "predicate": "price has risen 10%", "source": "defaults" },
+      { "keyword": "taking", "predicate": "100% - close the position", "source": "defaults" }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\n"
+  },
+  {
+    "name": "the first complement pair default wins",
+    "expect": "ok",
+    "defaults": "Until price has risen 10%\nTaking 100% - close the position\nUntil price has risen 20%\nTaking 100% - close the position\n",
+    "mergedHas": [
+      { "keyword": "until", "predicate": "price has risen 10%", "source": "defaults" }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\n"
+  },
+  {
+    "name": "no pair default where the story closes its own",
+    "expect": "ok",
+    "defaults": "Until price has risen 10%\nTaking 100% - close the position\n",
+    "mergedHas": [
+      { "keyword": "until", "predicate": "TP1", "source": "story" }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil TP1\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "the first solitary complement wins",
+    "expect": "ok",
+    "defaults": "Taking 100% - close the position\nTaking 50% and trail the rest\n",
+    "workingContains": "Until       TP1\nTaking      100% - close the position",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil TP1\n"
+  },
+  {
+    "name": "a Notes default joins the story's own Notes",
+    "expect": "ok",
+    "defaults": "Notes\nRisk no more than 1% per trade\n",
+    "workingContains": "Notes\n  RVI is Relative Volatility Index\n  Risk no more than 1% per trade",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nNotes\nRVI is Relative Volatility Index\n"
+  },
+  {
+    "name": "a Notes default where the story has none",
+    "expect": "ok",
+    "defaults": "Notes\nRisk no more than 1% per trade\n",
+    "workingContains": "Notes\n  Risk no more than 1% per trade",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "duplicate default keyword",
+    "expect": "error",
+    "contains": "already has a default",
+    "defaults": "SL 3%\nSL 5%\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a strategy() argument is not a clause default",
+    "expect": "error",
+    "contains": "is not a clause keyword",
+    "defaults": "initial_capital 10000\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "comments in a story",
+    "expect": "ok",
+    "story": "# a story about RVI\nStory x\nTrading BTC/USD 4H\n\n  # the regime\n  Given ranging\n  When cross up\n  Then Go Long\n  With 100 usdt\n  SL    3%\n  Until price has risen:\n            10%\n  Taking 100% - close the position\n  # mid-block comment\n            20%\n"
+  },
+  {
+    "name": "a story of comments alone is not a story",
+    "expect": "error",
+    "contains": "clause is missing",
+    "story": "# nothing here\n# but comments\n"
+  },
+  {
+    "name": "a quote line is not a comment",
+    "expect": "error",
+    "contains": "\">\" not recognised.",
+    "story": "# EMA setup\n> a note to myself, not part of the story\nStory x\nTrading BTC/USD 4H\n  Given ranging\n  When cross up\n  > why 20 and not 30\n  Then Go Long\n  SL    3%\n  Until 10%\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "a quote line in the defaults file is not a comment",
+    "expect": "error",
+    "contains": "\">\" is not a clause keyword.",
+    "defaults": "> my usual stop\nSL 3% of entry\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a greater-than inside clause text is not a comment",
+    "expect": "ok",
+    "mergedHas": [
+      {
+        "keyword": "until",
+        "predicate": "RVI >= 75"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil RVI >= 75\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a hash inside clause text is not a comment",
+    "expect": "ok",
+    "mergedHas": [
+      {
+        "keyword": "when",
+        "predicate": "price breaks the #1 level"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen price breaks the #1 level\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "comments in the defaults file",
+    "expect": "ok",
+    "defaults": "# my usual stop\nSL 3% of entry\n",
+    "mergedHas": [
+      {
+        "keyword": "sl",
+        "predicate": "3% of entry",
+        "source": "defaults"
+      }
+    ],
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a block form keeps its continuation lines in the merged copy",
+    "expect": "ok",
+    "workingContains": "Until       price has risen:\n            10% (TP1)\n            20% (TP2)",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL    3%\nUntil price has risen:\n            10% (TP1)\n            20% (TP2)\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a block form renders back to itself",
+    "expect": "ok",
+    "rendersBackToItself": true,
+    "story": "Story       EMA Trend & RVI Volatility\nTrading     BTC/USD 4H chart\n\n  Given     price regime is ranging\n  When      the 21EMA crosses above the 55EMA\n  Then      Go Long\n  With      100 usdt\n  SL        3%\n  Until     price has risen:\n            10% (TP1)\n            20% (TP2)\n  Taking    100% - close the position\n"
+  },
+  {
+    "name": "a continuation after a blank line keeps its own line number",
+    "expect": "ok",
+    "hintContains": "continuation text of \"Until\"",
+    "hintLine": 10,
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nUntil price has risen:\n            10% (TP1)\n\n            and 20% (TP2)\nTaking 100% - close the position\nSL    3%\n"
+  },
+  {
+    "name": "a keyword alone with continuations beats a default",
+    "expect": "ok",
+    "defaults": "Until price has risen 10%\n",
+    "mergedHas": [
+      {
+        "keyword": "until",
+        "predicate": "\nprice has risen 20%",
+        "source": "story"
+      }
+    ],
+    "workingContains": "\n            price has risen 20%",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil\n            price has risen 20%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Source stacks by repeating, by And and by Sources",
+    "expect": "ok",
+    "mergedHas": [
+      {
+        "keyword": "source",
+        "predicate": "EMA 5, RSA 21, EMA 21"
+      },
+      {
+        "keyword": "source",
+        "predicate": "quadzilla-tf Super Up"
+      },
+      {
+        "keyword": "source",
+        "predicate": "quadzilla-tf Stoch Cross Up"
+      }
+    ],
+    "workingContains": "Source      EMA 5, RSA 21, EMA 21\nSource      quadzilla-tf Super Up\nSource      quadzilla-tf Stoch Cross Up",
+    "story": "Story x\nTrading BTC/USD 4H\nSource EMA 5, RSA 21, EMA 21\nAnd quadzilla-tf Super Up\nSources quadzilla-tf Stoch Cross Up\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Source and Trading may appear in either order",
+    "expect": "ok",
+    "workingContains": "Story       x\nSource      EMA 21\nTrading     BTC/USD 4H",
+    "story": "Story x\nSource EMA 21\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Source after the header is an error",
+    "expect": "error",
+    "contains": "\"Source\" must come before \"Given\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nSource EMA 21\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Source in the head group renders back to itself",
+    "expect": "ok",
+    "rendersBackToItself": true,
+    "story": "Story       EMA Trend\nTrading     BTC/USD 4H chart\nSource      EMA 21, EMA 55\n\n  Given     price regime is ranging\n  When      the 21EMA crosses above the 55EMA\n  Then      Go Long\n  With      100 usdt\n  SL        3%\n  Until     10%\n  Taking    100% - close the position\n"
+  },
+  {
+    "name": "a continuation opening with Sources is a hint",
+    "expect": "ok",
+    "hintContains": "continuation text of \"Given\"",
+    "hintLine": 4,
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\n            sources EMA 21\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a blank Source clause is undecided",
+    "expect": "error",
+    "contains": "\"Source\" clause is undecided.",
+    "story": "Story x\nTrading BTC/USD 4H\nSource\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  }
+]

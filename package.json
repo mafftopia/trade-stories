@@ -1,0 +1,13 @@
+{
+  "name": "trade-stories",
+  "version": "1.0.0",
+  "description": "Trade Stories — a semi-prescriptive DSL for trade setups",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node dsl/tests/run.js"
+  }
+}

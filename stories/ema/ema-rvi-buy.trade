@@ -1,0 +1,22 @@
+Story       EMA Trend + RVI Buy
+Trading     BTC/USD 4H chart
+Sources     21 EMA, 55 EMA, ADX, RVI, bull flag chart pattern
+
+
+  Given     price regime on 4H and 1D charts are both ranging,
+            as calculated by: ADX(14) below 20
+  When      the 21EMA crosses above the 55EMA
+  And       RVI drops below 30
+  And       price retraces towards the 55 EMA,
+            forming a downward-sloping consolidation channel (a Bull Flag)
+  Then      Go Long
+  With      500 USD of position
+  SL        3%
+  Until     price has risen:
+            5% (TP1)
+            10% (TP2)
+  Taking    20% at TP1, then 20% at TP2, then trailing stop following 1% behind
+  Unless    RVI downward for more than 2 bars
+
+Notes:
+  RVI is Relative Volatility Index

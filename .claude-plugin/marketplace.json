@@ -1,0 +1,13 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "trade-stories",
+  "description": "The Trade Stories plugin: skills and agents for writing, verifying and linting trade setups written as Trade Stories.",
+  "owner": { "name": "maff" },
+  "plugins": [
+    {
+      "name": "trade-stories",
+      "description": "Write, verify and lint trade setups in the Trade Stories DSL.",
+      "source": "./"
+    }
+  ]
+}

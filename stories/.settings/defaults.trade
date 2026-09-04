@@ -1,0 +1,8 @@
+# A clause here is used by every story that doesn't state one of its own.
+# Written as you would write it in a story: the keyword, then your answer.
+
+With       500 USD margin, 10x leverage
+
+SL         3% of entry price
+
+Taking     100%, closing the trade

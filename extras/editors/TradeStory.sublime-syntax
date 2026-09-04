@@ -1,0 +1,367 @@
+%YAML 1.2
+---
+#  Trade Story syntax and error highlighting for Sublime text editor.
+#
+#  To install - restart Sublime once done:
+#
+#     Linux
+#       Create a symlink:
+#         ln -s /full/path/to/here/TradeStory.sublime-syntax ~/.config/sublime-text/Packages/User/TradeStory.sublime-syntax
+#
+#     MacOS
+#       Create a symlink:
+#         ln -s /full/path/to/here/TradeStory.sublime-syntax ~/Library/Application\ Support/Sublime\ Text/Packages/User/TradeStory.sublime-syntax
+#
+#     Windows
+#       Copy this file to:
+#         %APPDATA%\Sublime Text\Packages\User\
+#
+#   The symlink approach is so that when you get a new version of the
+#   trade-stories repo, Sublime will just pick up any changes here.
+
+name: Trade Story
+file_extensions:
+  - trade
+scope: source.trade
+
+contexts:
+  main:
+    - include: common_checks
+    - match: '(?i)^[ ]{0,10}(Story)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_post_story, predicate_body]
+    - include: invalid_fallthrough
+
+  # -------------------------------------------------------------------------
+  # Phase 1: Header Phase
+  # -------------------------------------------------------------------------
+  phase_post_story:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_setup
+    - match: '(?i)^[ ]{0,10}(Trading)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_post_trading, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Sources?)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_source_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_post_trading:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_setup
+    - match: '(?i)^[ ]{0,10}(Sources?)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_source_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Trading)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_source_stack:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_setup
+    - match: '(?i)^[ ]{0,10}(Sources?|And)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Trading)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_post_trading_from_source, predicate_body]
+    - include: invalid_fallthrough
+
+  phase_post_trading_from_source:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_setup
+    - match: '(?i)^[ ]{0,10}(Trading|Sources?|And)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  # -------------------------------------------------------------------------
+  # Phase 2: Trade Setup
+  # -------------------------------------------------------------------------
+  # Given opens the Trade Setup keywords; anything else arriving first is
+  # out of order.
+  jump_setup:
+    - match: '(?i)^[ ]{0,10}(Given)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_given_stack, predicate_body]
+
+  phase_given_stack:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(Given|And)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Except)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_except_post_given, predicate_body]
+    - match: '(?i)^[ ]{0,10}(When)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_when_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Then)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_then_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Or except)\b'
+      captures: {1: invalid.illegal.missing-except.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_except_post_given:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(When)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_when_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Then)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_then_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Given)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_when_stack:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(When|And)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Except)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_except_post_when, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Then)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_then_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Or except)\b'
+      captures: {1: invalid.illegal.missing-except.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_except_post_when:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Then)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_then_stack, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Given|When)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_then_stack:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_with
+    - match: '(?i)^[ ]{0,10}(Then|And)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Except)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_except_post_then, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Or except)\b'
+      captures: {1: invalid.illegal.missing-except.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_except_post_then:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_with
+    - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Given|When|Then)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  # -------------------------------------------------------------------------
+  # Phase 3: With
+  # -------------------------------------------------------------------------
+  jump_with:
+    - match: '(?i)^[ ]{0,10}(With)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_with, predicate_body]
+
+  phase_with:
+    - include: common_checks
+    - include: jump_notes
+    - include: jump_mgmt
+    - match: '(?i)^[ ]{0,10}(With)\b'
+      captures: {1: invalid.illegal.split-stack.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  # -------------------------------------------------------------------------
+  # Phase 4: Trade Management
+  # -------------------------------------------------------------------------
+  jump_mgmt:
+    - match: '(?i)(?=^[ ]{0,10}(SL|Until|Or until|Taking|Unless|Or unless)\b)'
+      set: phase_mgmt_00
+
+  phase_mgmt_00:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(SL)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Until)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_mgmt_U0, expect_taking, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Unless)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_mgmt_0L, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Or until|Or unless|Taking)\b'
+      captures: {1: invalid.illegal.missing-pair.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_mgmt_U0:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(SL)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Until|Or until)\b'
+      captures: {1: keyword.language.trade}
+      push: [expect_taking, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Unless)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_mgmt_UL, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Taking)\b'
+      captures: {1: invalid.illegal.orphaned-taking.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Or unless)\b'
+      captures: {1: invalid.illegal.missing-pair.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_mgmt_0L:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(SL|Unless|Or unless)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Until)\b'
+      captures: {1: keyword.language.trade}
+      set: [phase_mgmt_UL, expect_taking, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Or until|Taking)\b'
+      captures: {1: invalid.illegal.missing-pair.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  phase_mgmt_UL:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(SL|Unless|Or unless)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(Until|Or until)\b'
+      captures: {1: keyword.language.trade}
+      push: [expect_taking, predicate_body]
+    - match: '(?i)^[ ]{0,10}(Taking)\b'
+      captures: {1: invalid.illegal.orphaned-taking.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}(And)\b'
+      captures: {1: invalid.illegal.orphaned-and.trade}
+      push: predicate_body
+    - include: invalid_fallthrough
+
+  expect_taking:
+    - include: common_checks
+    - match: '(?i)^[ ]{0,10}(Taking)\b'
+      captures: {1: keyword.language.trade}
+      set: predicate_body
+    - match: '(?i)^[ ]{0,10}(Notes:?)(?=\s|$)'
+      captures: {1: invalid.illegal.missing-taking.trade}
+      set: phase_notes_start
+    - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|And|Until|Or until|SL|Unless|Or unless)\b'
+      captures: {1: invalid.illegal.missing-taking.trade}
+      set: predicate_body
+    - match: '^[ ]{0,10}\S.*'
+      scope: invalid.illegal.missing-taking.trade
+
+  # -------------------------------------------------------------------------
+  # Phase 5: Notes & Predicates
+  # -------------------------------------------------------------------------
+  jump_notes:
+    - match: '(?i)(?=^[ ]{0,10}(Notes:?)(?=\s|$))'
+      set: phase_notes_start
+
+  phase_notes_start:
+    - match: '(?i)^[ ]{0,10}(Notes:?)(?=\s|$)'
+      captures: {1: keyword.language.notes.trade}
+      set: notes_block
+
+  notes_block:
+    - match: '.*'
+      scope: comment.block.trade
+
+  predicate_body:
+    - match: '.*'
+      scope: string.unquoted.trade
+      set: continuation_block
+
+  continuation_block:
+    - include: common_checks
+    # Valid continuation: 11 or more spaces. Scopes string and stays in loop.
+    - match: '^[ ]{11,}.*'
+      scope: string.unquoted.trade
+    # Invalid continuation or next line: 0-10 spaces. Pops back to the phase.
+    - match: '^(?=[ ]{0,10}\S)'
+      pop: true
+
+  # -------------------------------------------------------------------------
+  # Validation Catch-Alls & Formatting
+  # -------------------------------------------------------------------------
+  invalid_fallthrough:
+    - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|Until|Or until|Taking|SL|Unless|Or unless|And)\b'
+      captures: {1: invalid.illegal.out-of-order.trade}
+      push: predicate_body
+    - match: '^[ ]{0,10}\S.*'
+      scope: invalid.illegal.unrecognized-text.trade
+
+  common_checks:
+    - match: '^[ ]*#.*'
+      scope: comment.line.number-sign.trade
+    - match: '^[ ]*[\t\x{00A0}\x{2000}-\x{200B}].*'
+      scope: invalid.illegal.whitespace.trade
+    - match: '^[ ]*$'
+      scope: text.trade

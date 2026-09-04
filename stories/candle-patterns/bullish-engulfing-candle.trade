@@ -1,0 +1,21 @@
+Story       Bullish engulfing candle
+Trading     btc/usdt perpetuals on bitunix, 12m
+
+  Given     price is below the VWAP
+  When      the candle closes as a bullish engulfing candle
+  And       the candle before was bearish
+  And       the next candle after the engulfing closes above
+            the engulfing's close
+  And       the engulfing's low is above the previous candle's low
+  Then      go long
+  With      100 USD position size, 10x leverage
+  SL        initially at the engulfing candle low
+            once the price is at the VWAP, move SL to the VWAP
+            & keep moving it to track the VWAP
+
+  Until     bearish engulfing candle closes
+  Taking    100%
+
+  Or until  Quadzilla super-down or Stoch cross down
+  Taking    100%
+     

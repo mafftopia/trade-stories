@@ -1,0 +1,11 @@
+node_modules/
+
+.claude/settings.local.json
+.claude/*.local.json
+
+.working/
+lint-overrides.md
+stories/.target/
+
+stories/your-stories/*
+!stories/your-stories/write-your-trade-stories-here

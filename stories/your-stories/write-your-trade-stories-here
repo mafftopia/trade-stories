@@ -1,0 +1,6 @@
+Write your own trade stories and place them in this folder (and subfolders).
+
+OR if you want to keep them in a separate location,
+ create a symlink to them, from this folder.
+
+You can then still run the Claude Code skills (/lint-story etc) from here.

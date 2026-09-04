@@ -1,0 +1,28 @@
+# Copy this file to your-stories and fill in an "answer" to each keyword!
+# Not every keyword is needed.
+# Use the defaults in .settings/defaults.trade so you don't have to provide the same old answers every time.
+
+
+Story       ...
+Trading     
+Source      
+
+  Given     
+  And
+  When
+  And      
+  Except    
+  Or except
+  Then      
+  With      
+  
+  Until     
+  Taking    
+
+  Or Until  
+  Taking    
+  
+  Unless    
+  Or unless  
+
+Notes:

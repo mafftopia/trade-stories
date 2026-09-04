@@ -1,0 +1,14 @@
+Story       21 & 55 EMA Crossover
+Trading     btcusdt, 1m timeframe
+
+  Given     uptrend - meaning the price has closed above the 9 EMA for the last 5 bars
+  When      the 21 EMA crosses above the 55 EMA
+  And       the RSI isn't yet in overbought (70 or above)
+  Then      go long
+  With      500 USDT margin, 10x leverage
+
+  Until     Close when RSI reaches 90 or above
+  Taking    all
+
+  Or until  price candle closes below 21 EMA
+  Taking    all

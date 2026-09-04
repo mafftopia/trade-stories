@@ -1,0 +1,29 @@
+# Here's a single-line comment.
+
+Story       Quadzilla-TF Stochastic Long
+Trading     1m timeframe, BTC/USD chart on Bitunix
+Source      quadzilla-tf: Super Up, Stoch Cross Up
+And         quadzilla-tf: Super Down, Stoch Cross Down
+
+  Given     the market is ranging:
+              ADX (14) below 20
+  When      Quadzilla TF's Super Up or Stoch Cross Up
+  Then      Go long
+  Except    if price is above VWAP
+  With      500 USD margin and 10x leverage
+  
+  Until     a Super Down signal fires
+  Taking    100%
+
+  Or Until  a Stoch Cross Down signal fires
+  Taking    100%
+  
+  OR Until  the price crosses above an EMA 9, 21 or 55 -
+            if the EMA is trending down:
+              the EMA is below its value 5 bars ago
+  Taking    100%
+
+  Unless    price drops below 21 EMA
+
+Notes: everything after this is some notes.
+And more notes.

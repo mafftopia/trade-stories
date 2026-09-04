@@ -1,0 +1,13 @@
+Story       9 EMA VWAP pullback
+Trading     btc/usdt perpetuals on bitunix, 12m
+Sources     9 EMA, VWAP
+
+  Given     price above 9 EMA (uptrend)
+  And       VWAP is below the 9 EMA
+  When      the price pulls back to the 9 EMA
+  Then      BUY
+  With      1000 usdt position size, including 10x leverage
+  SL        at the VWAP at entry
+            Move SL up to 0.2% above entry once the position is >= 1% above entry
+  Until     the price candle closes below the 9 EMA
+  Taking    100% - close the position
