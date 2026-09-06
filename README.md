@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="trade-stories-banner.jpg" width="100%" alt="Trade Stories project banner" />
+</p>
+
 # Trade Stories DSL
 
 *For help getting started: find me (maff) at the [Save With Crypto trader's Discord](https://savewithcrypto.org/discord).*
