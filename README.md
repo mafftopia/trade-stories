@@ -4,8 +4,7 @@
 
 # Trade Stories DSL
 
-*For help getting started: find me (maff) at the [Save With Crypto trader's Discord](https://savewithcrypto.org/discord).*
-
+For contact details, find me (maff) at: [mafftopia.com](https://mafftopia.com).
 
 ***Write your trade setups in a commonly understood format and set of conventions.***
 
@@ -144,6 +143,9 @@ Other Claude commands/skills available here:
 `lint-story` - check your story for minor issues (warnings, rather than errors) such as ambiguity.
 
 If you want to go further and have Claude turn your story into a TradingView strategy, run it, backtest it on historical data, analyse the results with you, and automatically trade the strategy, install [Trade Story System](https://github.com/mafftopia/trade-story-system) - which uses trade-stories as a Claude Code plug-in.
+
+
+*For more help getting started: find me (maff) at the [Save With Crypto trader's Discord](https://savewithcrypto.org/discord).*
 
 
 ## Getting Started - Developers and AI Agents
