@@ -4,8 +4,6 @@
 
 # Trade Stories DSL
 
-For contact details, find me (maff) at: [mafftopia.com](https://mafftopia.com).
-
 ***Write your trade setups in a commonly understood format and set of conventions.***
 
 When you have a setup written as a Trade Story, you can:
@@ -71,6 +69,9 @@ This trade-stories repo doubles as a standalone set of AI agent skills AND a ski
 ```
 /plugin marketplace add mafftopia/trade-stories
 ```
+ 
+_For contact details, find me (maff) at: [mafftopia.com](https://mafftopia.com)._
+ 
 
 
 ## Getting Started - Traders
