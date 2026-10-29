@@ -36,6 +36,9 @@ const REPEATABLE = [COMPLEMENT, ...COMPLEMENTED, ...Object.keys(SYNONYM)];
 
 const baseOf = (keyword) => SYNONYM[keyword] || keyword;
 
+// A clause with text in it. An empty one leaves its keyword to be filled.
+export const said = (c) => c.predicate.some((t) => t.text !== "");
+
 export function loadDefaults(dir) {
   const path = join(dir, "defaults.trade");
   if (!existsSync(path)) return { defaults: [], errors: [], path };
@@ -82,6 +85,10 @@ export function parseDefaults(source) {
     const predicate = c.predicate.map((p) => p.text);
     const open = defaults[defaults.length - 1];
 
+    if (c.keyword === "reversed") {
+      errors.push({ ...at(line), message: `"Reversed" has no place in defaults.trade.` });
+      continue;
+    }
     if (predicate.join("").trim() === "") {
       errors.push({ ...at(line), message: `"${c.keyword}" default has no value.` });
       continue;
@@ -119,8 +126,6 @@ export function parseDefaults(source) {
 // adds to whatever the story already has. The story keeps the order it was
 // written in, so only a default is placed.
 export function mergeDefaults(clauses, defaults) {
-  const said = (c) => c.predicate.some((t) => t.text !== "");
-
   const supplied = new Set(clauses.filter(said).map((c) => c.keyword));
 
   const merged = clauses

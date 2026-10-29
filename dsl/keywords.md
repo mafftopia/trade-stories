@@ -21,6 +21,9 @@ Sources     Which indicators, chart patterns or plotted series does the setup us
             (Must add up to 100% of the position)
   Unless    What condition, arising early, exits before target?
 
+Reversed:
+  (Optional) Which clauses should be rewritten to allow for a flipped/reversed version of the trade?
+
 Notes:
   What context helps a reader, without being acted on?
 ```

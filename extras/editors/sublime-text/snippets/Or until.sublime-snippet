@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Or until  ${1:What level (or self-contained set of levels) should the trade be closed at?}]]></content>
+  <tabTrigger>oruntil</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What level (or self-contained set of levels) should the trade be closed at?</description>
+</snippet>

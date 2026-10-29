@@ -1,0 +1,7 @@
+{
+  // Runs the mechanical verify checks on the story in the active view, with the
+  // package's own copy of them. Errors list in the build panel; click one to go
+  // to its line.
+  "target": "trade_story_verify",
+  "selector": "source.trade"
+}

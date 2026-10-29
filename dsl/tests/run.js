@@ -31,6 +31,8 @@ for (const c of cases) {
   if (ok && c.hintLine) ok = hints.some((h) => h.line === c.hintLine);
 
   if (ok && c.workingContains) ok = working.includes(c.workingContains);
+  if (ok && c.workingExcludes) ok = !working.includes(c.workingExcludes);
+  if (ok && c.errorCount !== undefined) ok = errors.length === c.errorCount;
 
   // A story already in the layout write-story produces must come back from the
   // renderer unchanged. Only for a case with no defaults, since a default would

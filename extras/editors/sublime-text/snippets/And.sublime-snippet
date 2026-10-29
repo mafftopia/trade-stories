@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  And       ${1:the next condition in this stack}]]></content>
+  <tabTrigger>and</tabTrigger>
+  <scope>source.trade</scope>
+  <description>the next condition in this stack</description>
+</snippet>

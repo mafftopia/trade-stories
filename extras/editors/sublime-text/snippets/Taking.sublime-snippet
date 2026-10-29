@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Taking    ${1:How much profit to take at each level?}]]></content>
+  <tabTrigger>taking</tabTrigger>
+  <scope>source.trade</scope>
+  <description>How much profit to take at each level?</description>
+</snippet>

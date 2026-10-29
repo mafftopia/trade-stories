@@ -1,0 +1,11 @@
+# A Trade Story is spaces only, with no tabs anywhere in it. Editors that read
+# EditorConfig (BBEdit natively, Sublime Text with its EditorConfig package)
+# apply this to every .trade file.
+root = true
+
+[*.trade]
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true

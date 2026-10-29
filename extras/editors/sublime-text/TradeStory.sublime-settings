@@ -1,0 +1,8 @@
+{
+  // Trade Stories are spaces only: body keywords two in, predicates at column 12.
+  "translate_tabs_to_spaces": true,
+  "tab_size": 2,
+  "detect_indentation": false,
+  "rulers": [12],
+  "draw_white_space": ["leading", "trailing"]
+}

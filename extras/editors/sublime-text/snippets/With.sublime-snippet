@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  With      ${1:What's the position size? Fixed amount or %? Any leverage?}]]></content>
+  <tabTrigger>with</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What's the position size? Fixed amount or %? Any leverage?</description>
+</snippet>

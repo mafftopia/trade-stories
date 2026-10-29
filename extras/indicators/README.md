@@ -16,3 +16,6 @@ the one the story names is a different indicator, so leave it alone. Read the
 notes in the matching folder; an indicator without one has nothing to read.
 
 Inside the folder, look for a file called indicator.md and start there.
+
+An agent outside the plugin gets an indicator's notes with
+`/indicator-details <name>`.

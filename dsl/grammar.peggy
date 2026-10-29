@@ -11,6 +11,8 @@
 // A clause keyword is indented by up to 10 spaces; a line indented further is
 // continuation text of the clause above it. See syntax-rules.md.
 //
+// Reversed is a clause like any other. Splitting the list at it is verify.js's.
+//
 // Regenerate src/parser.js after any edit here:
 //   npx peggy@5.1.0 --format es -o dsl/src/parser.js dsl/grammar.peggy
 //
@@ -20,7 +22,7 @@
   const KEYWORDS = [
     "story", "trading", "source", "sources", "given", "when", "and",
     "except", "then", "with", "until", "or until", "taking", "sl",
-    "unless", "or unless", "or except"
+    "unless", "or unless", "or except", "reversed", "reversal"
   ];
 
   // Source and Sources are one keyword, the plural reading naturally with a
@@ -50,25 +52,7 @@ Document
     }
 
 Clause
-  = HeadClause
-  / BodyClause
-
-// Source stacks by repeating or by And.
-HeadClause
-  = ind:Indent kw:HeadKeyword text:InlineText? NL
-    conts:(Skip* c:ContLine { return textLine(c.text, c.line); })*
-    Skip*
-    {
-      return {
-        keyword: kw.name,
-        raw: kw.raw,
-        column: ind.length,
-        predicate: [textLine(text === null ? "" : text.trim(), kw.line)].concat(conts)
-      };
-    }
-
-BodyClause
-  = ind:Indent kw:BodyKeyword text:InlineText? NL
+  = ind:Indent kw:(HeadKeyword / BodyKeyword / ReversedKeyword) text:InlineText? NL
     conts:(Skip* c:ContLine { return textLine(c.text, c.line); })*
     Skip*
     {
@@ -100,14 +84,22 @@ NotesSection
       };
     }
 
-// Notes: is a synonym for Notes, the one place a colon closes a keyword.
+// Notes: is a synonym for Notes.
 NotesKeyword
   = name:$("notes"i) ":" SP* { return name + ":"; }
   / name:$("notes"i) KeywordSep { return name; }
 
+// Source stacks by repeating or by And.
 HeadKeyword
   = name:$("story"i / "trading"i / "sources"i / "source"i) KeywordSep {
       return { name: normHead(name), raw: name, line: location().start.line };
+    }
+
+// Reversed, Reversal and either with a colon are one keyword; with Notes it is
+// the only one a colon may close.
+ReversedKeyword
+  = name:$(("reversed"i / "reversal"i) ":"?) KeywordSep {
+      return { name: "reversed", raw: name, line: location().start.line };
     }
 
 // A two-word keyword may be written with any run of spaces between the words;

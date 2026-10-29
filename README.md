@@ -64,7 +64,7 @@ This project contains the following:
 * A definition of the Trade Stories *Domain Specific Language (DSL)*, with tool support
 * The DSL defined as a "peggy" grammar, so tools and apps can automatically check your stories for you
 
-This trade-stories repo doubles as a standalone set of AI agent skills AND a skills plugin. So if you want, you can install trade-stories into your own local project with (in Claude Code):
+This trade-stories repo doubles as a standalone set of AI agent skills AND a skills plugin. So if you want, you can install trade-stories into your own local project with (in your AI agent chat):
 
 ```
 /plugin marketplace add mafftopia/trade-stories
@@ -87,7 +87,7 @@ If you're reading this page on Github, the best way to get started is to downloa
 Then - additional stuff, if you want it:
 
 1. To use the bundled scripts (which your AI assistant will want to use), [install Node.js](https://nodejs.org/en/download).
-2. If you want to use an AI assistant, install [Claude Code](https://claude.com/product/claude-code) - or if you'd prefer to use it within the [Claude desktop app](https://claude.com/product/overview), just install that; then click on the Code tab.
+2. If you want to use an AI assistant, install your favourite - I tend to use [Claude Code](https://claude.com/product/claude-code) - or if you'd prefer to use it within the [Claude desktop app](https://claude.com/product/overview), just install that; then click on the Code tab.
 
 And a quick reminder - if you're totally stuck, or want to ask questions, provide feedback, discuss trade setups etc, find us on Discord at [Save With Crypto](https://savewithcrypto.org/discord).
 
@@ -119,7 +119,7 @@ Here's a [more in-depth explanation of each keyword](https://mafftopia.com/trade
 
 Most of the files under `dsl` and elsewhere are instructions to AI assistants (agents); and tbh you'll find that using just such an AI assistant is how you'll get the best results from Trade Stories.
 
-Assuming you're using the Claude desktop app and/or Claude Code (which this repo is all set up for):
+Assuming you're using the Claude desktop app and/or Claude Code:
 
 In a terminal, navigate to this folder, then type:
 
@@ -135,15 +135,17 @@ Type `/write-story`
 
 You can either press Enter, or type a name for your new trade setup - OR, in fact, start to describe it. Put in as much or as little detail as you want.
 
-Claude will then proceed to ask you questions, to either get clarification or fill in any gaps in the details. Once it has everything it needs, it'll write your trade story and put in `stories/your-stories`.
+The agent will then proceed to ask you questions, to either get clarification or fill in any gaps in the details. Once it has everything it needs, it'll write your trade story and put in `stories/your-stories`.
 
-Other Claude commands/skills available here:
+Other commands/skills available here:
 
 `verify-story` - check your story for "showstopper" errors which would prevent it from being turned into a trading strategy.
 
 `lint-story` - check your story for minor issues (warnings, rather than errors) such as ambiguity.
 
-If you want to go further and have Claude turn your story into a TradingView strategy, run it, backtest it on historical data, analyse the results with you, and automatically trade the strategy, install [Trade Story System](https://github.com/mafftopia/trade-story-system) - which uses trade-stories as a Claude Code plug-in.
+`indicator-details` - show the notes held here on an indicator, or list the indicators that have notes.
+
+If you want to go further and have the agent turn your story into a TradingView strategy, run it, backtest it on historical data, analyse the results with you, and automatically trade the strategy, there are projects appearing which use trade-stories as an AI agent plug-in.
 
 
 *For more help getting started: find me (maff) at the [Save With Crypto trader's Discord](https://savewithcrypto.org/discord).*
@@ -151,7 +153,9 @@ If you want to go further and have Claude turn your story into a TradingView str
 
 ## Getting Started - Developers and AI Agents
 
-Some Claude Code skills are defined here - for writing, verifying and linting stories.
+To understand Trade Stories and its rules, read dsl/keywords.md, syntax-rules.md and domain-rules.md.
 
-There's also a Claude Code plug-in wrapper, which simply points at the skills and agents defined in .claude. This allows you to bring the Trade Stories DSL directly into your own project - or into a project that already uses it, for example [Trade Story System](https://github.com/mafftopia/trade-story-system).
+Some agent skills are defined in this repo - for writing, verifying and linting stories.
+
+There's also a plug-in wrapper, which simply points at the skills and agents defined in .claude. This allows you to bring the Trade Stories DSL directly into your own project.
 

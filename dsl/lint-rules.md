@@ -33,8 +33,10 @@ no output at all.
 ### one-and-per-and-clause
 
 **When** For keywords that can be "AND" stacked, it's recommended that each
-clause only contains one condition. "This and that" belong in a clause each.
-"This or that" is one condition.
+clause only contains one condition. A predicate worded as two conditions that
+must both be true belongs in a clause each; one presenting something as one
+condition, or worded so it is unclear which, is one condition. "This or that"
+is one condition.
 
 **Warn** `<keyword>` holds conditions that must all be true. Give each a line of
 its own, stacking the rest under `<stacking keyword>`.
@@ -47,10 +49,11 @@ part of it fired.
 ### one-or-per-or-clause
 
 **When** For keywords that can be "OR" stacked, it's recommended that each clause
-only contains one condition. "This or that" belong in a clause each. "This and
-that" is one condition. `Until`/`Taking` has an exception to this rule: `Until`
-can list multiple "or" targets, each of which is addressed in its paired `Taking`
-clause.
+only contains one condition. A predicate worded as two alternative conditions
+belongs in a clause each; one presenting something as one condition, or worded
+so it is unclear which, is one condition. "This and that" is one condition.
+`Until`/`Taking` has an exception to this rule: `Until` can list multiple "or"
+targets, each of which is addressed in its paired `Taking` clause.
 
 **Warn** `<keyword>` holds alternative conditions. Give each a line of its own,
 stacking the rest under `<stacking keyword>`.
@@ -94,3 +97,15 @@ not reached yet.
 **Because** No clause holds a timeframe in a field of its own, so every one sits
 in free text and has to be inferred. Canonical forms remove the guesswork, and
 an agent that guesses wrong picks the wrong chart.
+
+### unused-source
+
+**When** A `Source` clause names something no other clause of the story uses.
+A source the story uses need not be listed, so the converse is never raised.
+
+**Warn** `Source` names `<source>`, which no other clause uses.
+
+**Because** A reader takes the `Source` list as what the setup reads, so an
+entry nothing uses sends them looking for a clause that is not there, and
+whatever maps the story onto a platform may load an indicator the strategy
+never reads.

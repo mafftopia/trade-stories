@@ -76,3 +76,13 @@ The merged story is written to `.working/stories/` as it is checked. It is
 generated on every run and gitignored; edit the story, never the working copy.
 It opens with a `#` comment saying as much, and carries `Notes` after the Rules,
 so a skill reading only the working copy still has the context a Rule may need.
+
+## The reversed story
+
+For **Reversed** in `dsl/domain-rules.md`.
+
+`merged` and the working copy carry the reversed story in full after a
+`Reversed` clause, whether the story wrote one or only carries reversible
+tokens. Check it as you check the primary. A finding on a clause the section
+did not replace is one finding, on the primary's line; where it holds for one
+story and not the other, say which.

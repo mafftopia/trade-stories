@@ -1,23 +1,8 @@
 %YAML 1.2
 ---
-#  Trade Story syntax and error highlighting for Sublime text editor.
+#  Trade Story syntax and error highlighting for Sublime Text.
 #
-#  To install - restart Sublime once done:
-#
-#     Linux
-#       Create a symlink:
-#         ln -s /full/path/to/here/TradeStory.sublime-syntax ~/.config/sublime-text/Packages/User/TradeStory.sublime-syntax
-#
-#     MacOS
-#       Create a symlink:
-#         ln -s /full/path/to/here/TradeStory.sublime-syntax ~/Library/Application\ Support/Sublime\ Text/Packages/User/TradeStory.sublime-syntax
-#
-#     Windows
-#       Copy this file to:
-#         %APPDATA%\Sublime Text\Packages\User\
-#
-#   The symlink approach is so that when you get a new version of the
-#   trade-stories repo, Sublime will just pick up any changes here.
+#  To install, see README.md in this folder.
 
 name: Trade Story
 file_extensions:
@@ -29,7 +14,7 @@ contexts:
     - include: common_checks
     - match: '(?i)^[ ]{0,10}(Story)\b'
       captures: {1: keyword.language.trade}
-      set: [phase_post_story, predicate_body]
+      set: [phase_post_story, story_title]
     - include: invalid_fallthrough
 
   # -------------------------------------------------------------------------
@@ -38,6 +23,7 @@ contexts:
   phase_post_story:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_setup
     - match: '(?i)^[ ]{0,10}(Trading)\b'
       captures: {1: keyword.language.trade}
@@ -53,6 +39,7 @@ contexts:
   phase_post_trading:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_setup
     - match: '(?i)^[ ]{0,10}(Sources?)\b'
       captures: {1: keyword.language.trade}
@@ -68,6 +55,7 @@ contexts:
   phase_source_stack:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_setup
     - match: '(?i)^[ ]{0,10}(Sources?|And)\b'
       captures: {1: keyword.language.trade}
@@ -80,6 +68,7 @@ contexts:
   phase_post_trading_from_source:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_setup
     - match: '(?i)^[ ]{0,10}(Trading|Sources?|And)\b'
       captures: {1: invalid.illegal.split-stack.trade}
@@ -99,6 +88,7 @@ contexts:
   phase_given_stack:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(Given|And)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -119,6 +109,7 @@ contexts:
   phase_except_post_given:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -139,6 +130,7 @@ contexts:
   phase_when_stack:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(When|And)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -156,6 +148,7 @@ contexts:
   phase_except_post_when:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -173,6 +166,7 @@ contexts:
   phase_then_stack:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_with
     - match: '(?i)^[ ]{0,10}(Then|And)\b'
       captures: {1: keyword.language.trade}
@@ -188,6 +182,7 @@ contexts:
   phase_except_post_then:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_with
     - match: '(?i)^[ ]{0,10}(Except|Or except)\b'
       captures: {1: keyword.language.trade}
@@ -211,6 +206,7 @@ contexts:
   phase_with:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - include: jump_mgmt
     - match: '(?i)^[ ]{0,10}(With)\b'
       captures: {1: invalid.illegal.split-stack.trade}
@@ -230,6 +226,7 @@ contexts:
   phase_mgmt_00:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(SL)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -250,6 +247,7 @@ contexts:
   phase_mgmt_U0:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(SL)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -273,6 +271,7 @@ contexts:
   phase_mgmt_0L:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(SL|Unless|Or unless)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -290,6 +289,7 @@ contexts:
   phase_mgmt_UL:
     - include: common_checks
     - include: jump_notes
+    - include: jump_reversed
     - match: '(?i)^[ ]{0,10}(SL|Unless|Or unless)\b'
       captures: {1: keyword.language.trade}
       push: predicate_body
@@ -312,6 +312,9 @@ contexts:
     - match: '(?i)^[ ]{0,10}(Notes:?)(?=\s|$)'
       captures: {1: invalid.illegal.missing-taking.trade}
       set: phase_notes_start
+    - match: '(?i)^[ ]{0,10}((?:Reversed|Reversal):?)(?=\s|$)'
+      captures: {1: invalid.illegal.missing-taking.trade}
+      set: phase_reversed
     - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|And|Until|Or until|SL|Unless|Or unless)\b'
       captures: {1: invalid.illegal.missing-taking.trade}
       set: predicate_body
@@ -319,7 +322,31 @@ contexts:
       scope: invalid.illegal.missing-taking.trade
 
   # -------------------------------------------------------------------------
-  # Phase 5: Notes & Predicates
+  # Phase 5: Reversed
+  # -------------------------------------------------------------------------
+  # Reversed is alone on its line; text after it is flagged. The clauses under
+  # it may be any keyword, in a story's order, so the section is highlighted
+  # permissively rather than re-run through the phases above.
+  jump_reversed:
+    - match: '(?i)^[ ]{0,10}((?:Reversed|Reversal):?)[ ]*$'
+      captures: {1: keyword.language.trade}
+      set: phase_reversed
+    - match: '(?i)^[ ]{0,10}((?:Reversed|Reversal):?)[ ]+(\S.*)$'
+      captures: {1: keyword.language.trade, 2: invalid.illegal.reversed-text.trade}
+      set: phase_reversed
+
+  phase_reversed:
+    - include: common_checks
+    - include: jump_notes
+    - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|And|Until|Or until|Taking|SL|Unless|Or unless)\b'
+      captures: {1: keyword.language.trade}
+      push: predicate_body
+    - match: '(?i)^[ ]{0,10}((?:Reversed|Reversal):?)(?=\s|$)'
+      captures: {1: invalid.illegal.out-of-order.trade}
+    - include: invalid_fallthrough
+
+  # -------------------------------------------------------------------------
+  # Phase 6: Notes & Predicates
   # -------------------------------------------------------------------------
   jump_notes:
     - match: '(?i)(?=^[ ]{0,10}(Notes:?)(?=\s|$))'
@@ -334,25 +361,45 @@ contexts:
     - match: '.*'
       scope: comment.block.trade
 
+  # The rest of the keyword line is predicate text, with reversible tokens
+  # picked out of it.
   predicate_body:
-    - match: '.*'
-      scope: string.unquoted.trade
+    - meta_scope: string.unquoted.trade
+    - include: reversible_token
+    - match: '$'
+      set: continuation_block
+
+  # The Story predicate is the story's name, scoped so Goto Symbol lists it.
+  story_title:
+    - meta_scope: entity.name.section.trade
+    - include: reversible_token
+    - match: '$'
       set: continuation_block
 
   continuation_block:
     - include: common_checks
     # Valid continuation: 11 or more spaces. Scopes string and stays in loop.
-    - match: '^[ ]{11,}.*'
-      scope: string.unquoted.trade
+    - match: '^(?=[ ]{11,})'
+      push: continuation_line
     # Invalid continuation or next line: 0-10 spaces. Pops back to the phase.
     - match: '^(?=[ ]{0,10}\S)'
       pop: true
+
+  continuation_line:
+    - meta_scope: string.unquoted.trade
+    - include: reversible_token
+    - match: '$'
+      pop: true
+
+  reversible_token:
+    - match: '(?i)\[(?:buy|sell|above|below)\]'
+      scope: keyword.operator.reversible.trade
 
   # -------------------------------------------------------------------------
   # Validation Catch-Alls & Formatting
   # -------------------------------------------------------------------------
   invalid_fallthrough:
-    - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|Until|Or until|Taking|SL|Unless|Or unless|And)\b'
+    - match: '(?i)^[ ]{0,10}(Story|Trading|Sources?|Given|When|Then|With|Except|Or except|Until|Or until|Taking|SL|Unless|Or unless|And|Reversed|Reversal)\b'
       captures: {1: invalid.illegal.out-of-order.trade}
       push: predicate_body
     - match: '^[ ]{0,10}\S.*'

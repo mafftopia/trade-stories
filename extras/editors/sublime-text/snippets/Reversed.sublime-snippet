@@ -1,0 +1,7 @@
+<snippet>
+  <content><![CDATA[Reversed:
+  ${1:Which clauses should be rewritten to allow for a flipped/reversed version of the trade?}]]></content>
+  <tabTrigger>reversed</tabTrigger>
+  <scope>source.trade</scope>
+  <description>Which clauses should be rewritten to allow for a flipped/reversed version of the trade?</description>
+</snippet>

@@ -34,6 +34,7 @@ Keywords are grouped into the following sets; the sets must appear in the order 
 
 ### Footer keywords
 
+- `Reversed`/`Reversed:`/`Reversal`/`Reversal:`
 - `Notes`/`Notes:`
 
 
@@ -48,6 +49,17 @@ Tab characters not allowed; spaces only. Also, only “normal” ASCII-style spa
 No more than one clause per line.
 
 Continuation blocks: each predicate can be multi-line - this makes it a “block” predicate (or block clause). The continuation lines must all be positioned at column >= 12 with only whitespace to the left.
+
+`Reversed` opens the Reversed section: every clause after it, up to `Notes` or the end of the file, belongs to it. `Reversed` is alone on its line, with nothing to its right. Inside the section every rule here applies except Mandatory keywords — clauses stack and order as they do in a story, and any may be left out.
+
+Reversible tokens only appear in predicates, and are case insensitive. The full list of recognised reversible tokens (including the square brackets) is:
+
+- `[BUY]`
+- `[SELL]`
+- `[above]`
+- `[below]`
+
+Any other bracketed text is ordinary predicate text.
 
 A line starting with # (not counting whitespace) is a single-line comment and not parsed.
 
@@ -76,7 +88,7 @@ For the follow-up keywords in a stack, `And` can optionally be used in place of 
 
 The following keywords are AND-stackable:
 
-- `Source`/`Sources`
+- `Source`
 - `Given`
 - `When`
 - `Then`
@@ -98,7 +110,7 @@ Where the listed keywords are stackable, the keyword listed here means the full 
 Not counting whitespace or comment lines:
 
 - `Story` must always be the first keyword
-- `Trading` and `Source`/`Sources` are always after `Story`
+- `Trading` and `Source` are always after `Story`
 - `Given` is always the first of the Trade Setup keywords
 - `Then` is always after `When`
 - `With` is always after `Then`
@@ -107,7 +119,8 @@ Not counting whitespace or comment lines:
 - Any `Or until`s are always after the first `Until`
 - Any `Or except`s are always after the first `Except`
 - Any `Or unless`es are always after the first `Unless`
-- `Notes`/`Notes:` must be the final keyword
+- `Reversed` must be the final keyword not counting `Notes`
+- `Notes` must be the final keyword
 
 Provided they’re not splitting up an AND stack or OR stack, or breaking the keyword ordering rules:
 

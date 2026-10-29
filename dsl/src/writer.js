@@ -14,10 +14,12 @@ const LABEL = {
   when: "When", and: "And", except: "Except", "or except": "Or Except",
   then: "Then", with: "With", sl: "SL",
   until: "Until", taking: "Taking", "or until": "Or Until",
-  unless: "Unless", "or unless": "Or Unless", notes: "Notes"
+  unless: "Unless", "or unless": "Or Unless", notes: "Notes",
+  reversed: "Reversed"
 };
 
-const HEADER = "# Generated copy with all defaults applied - don't edit.\n\n";
+const HEADER =
+  "# Generated copy with defaults applied and any Reversed section assembled - don't edit.\n\n";
 
 const HEADS = ["story", "trading", "source"];
 
@@ -29,6 +31,7 @@ const BODY_INDENT = 2;
 const linesOf = (c) => c.predicate.map((p) => p.text);
 
 // Notes is rendered as a block, since its predicate may run to several lines.
+// Reversed stands alone on its line, the reversed story in full under it.
 export function renderWorkingCopy(merged) {
   if (merged.length === 0) return "";
 
@@ -42,6 +45,10 @@ export function renderWorkingCopy(merged) {
     const width = Math.max(
       COLUMN, Math.max(...rules.map((c) => LABEL[c.keyword].length)) + 2);
     for (const c of rules) {
+      if (c.keyword === "reversed") {
+        lines.push("", LABEL.reversed);
+        continue;
+      }
       const [first, ...rest] = linesOf(c);
       lines.push(LABEL[c.keyword].padEnd(width) + first);
       for (const cont of rest) lines.push(" ".repeat(width) + cont);
@@ -57,18 +64,19 @@ export function renderWorkingCopy(merged) {
   return HEADER + lines.join("\n") + "\n";
 }
 
+// A Reversed clause opens a second part laid out like the first, under a
+// `Reversed:` line of its own.
 export function renderStory(clauses) {
   if (clauses.length === 0) return "";
 
-  const heads = clauses.filter((c) => HEADS.includes(c.keyword));
-  const rules = clauses.filter(
-    (c) => !HEADS.includes(c.keyword) && c.keyword !== "notes");
+  const at = clauses.findIndex((c) => c.keyword === "reversed");
   const notes = clauses.find((c) => c.keyword === "notes");
-  const lines = [];
+  const lines = partLines(at === -1 ? clauses : clauses.slice(0, at));
 
-  for (const c of heads) lines.push(...clauseLines(c, 0));
-  if (heads.length > 0 && rules.length > 0) lines.push("");
-  for (const c of rules) lines.push(...clauseLines(c, BODY_INDENT));
+  if (at !== -1) {
+    lines.push("", LABEL.reversed + ":");
+    lines.push(...partLines(clauses.slice(at + 1)));
+  }
 
   if (notes) {
     if (lines.length > 0) lines.push("");
@@ -77,6 +85,18 @@ export function renderStory(clauses) {
   }
 
   return lines.join("\n") + "\n";
+}
+
+function partLines(clauses) {
+  const heads = clauses.filter((c) => HEADS.includes(c.keyword));
+  const rules = clauses.filter(
+    (c) => !HEADS.includes(c.keyword) && c.keyword !== "notes");
+  const lines = [];
+
+  for (const c of heads) lines.push(...clauseLines(c, 0));
+  if (heads.length > 0 && rules.length > 0) lines.push("");
+  for (const c of rules) lines.push(...clauseLines(c, BODY_INDENT));
+  return lines;
 }
 
 function clauseLines(c, indent) {

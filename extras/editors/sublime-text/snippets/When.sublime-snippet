@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  When      ${1:What event or signal triggers entry?}]]></content>
+  <tabTrigger>when</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What event or signal triggers entry?</description>
+</snippet>

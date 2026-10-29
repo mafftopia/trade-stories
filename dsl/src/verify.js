@@ -4,14 +4,21 @@
 // Order and cardinality checks run on what the trader wrote. Only the
 // required-clause check runs after defaults.trade has been merged in, so a
 // badly ordered story cannot be silently reordered by the merge.
+//
+// A Reversed clause splits the list: the primary story above it, the section
+// under it. The section is checked as a partial story, then laid over the
+// merged primary, and the reversed story that makes is checked as a whole.
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
 import * as parser from "./parser.js";
 import {
-  loadDefaults, parseDefaults, mergeDefaults, COMPLEMENTED, SYNONYM, STACKS
+  loadDefaults, parseDefaults, mergeDefaults, said,
+  COMPLEMENTED, SYNONYM, STACKS
 } from "./defaults.js";
+import { hasReversible, reverse } from "./reversal.js";
 import { renderWorkingCopy } from "./writer.js";
+import { storiesFolder, settingsFolder, workingFolder } from "./stories-folder.js";
 
 // Mandatory keywords in ../syntax-rules.md is the authoritative list; keep this
 // in step with it. Checked against the merge, so a default satisfies any of them.
@@ -41,7 +48,8 @@ const LABEL = {
   and: "And", except: "Except", "or except": "Or Except",
   then: "Then", with: "With", source: "Source",
   until: "Until", taking: "Taking", "or until": "Or Until",
-  unless: "Unless", "or unless": "Or Unless", sl: "SL", notes: "Notes"
+  unless: "Unless", "or unless": "Or Unless", sl: "SL", notes: "Notes",
+  reversed: "Reversed"
 };
 
 function err(line, text, message) {
@@ -78,11 +86,25 @@ export function verify(source, options = {}) {
   }
 
   const clauses = parsed.clauses;
-
-  resolveAnd(clauses, lines, errors);
-  checkCardinality(clauses, lines, errors);
-  checkOrder(clauses, lines, errors);
   collectHints(clauses, hints);
+  checkCardinality(clauses, ["reversed"], lines, errors);
+
+  const at = clauses.findIndex((c) => c.keyword === "reversed");
+  const marker = at === -1 ? null : clauses[at];
+  const primary = at === -1 ? clauses : clauses.slice(0, at);
+  const section = at === -1 ? []
+    : clauses.slice(at + 1).filter((c) => c.keyword !== "reversed");
+
+  if (marker && said(marker)) {
+    errors.push(err(lineOf(marker), lines[lineOf(marker) - 1],
+      `"Reversed" must be alone on its line. The clauses that differ go on the lines under it.`));
+  }
+
+  for (const list of [primary, section]) {
+    resolveAnd(list, lines, errors);
+    checkCardinality(list, AT_MOST_ONE, lines, errors);
+    checkOrder(list, lines, errors);
+  }
 
   const { defaults, errors: defaultErrors } =
     options.defaultsText !== undefined ? parseDefaults(options.defaultsText)
@@ -96,16 +118,78 @@ export function verify(source, options = {}) {
   // Notes is parsed apart from the clauses and checked by none of them, but the
   // merged copy carries it so a skill reading only that still has the context.
   const forMerge = parsed.notes
-    ? clauses.concat([{ ...parsed.notes, keyword: "notes" }])
-    : clauses;
+    ? primary.concat([{ ...parsed.notes, keyword: "notes" }])
+    : primary;
 
   const merged = mergeDefaults(forMerge, defaults);
   checkAlternates(merged, lines, errors);
-  checkRequired(merged, clauses, lines, errors);
+  checkRequired(merged, primary, lines, errors);
   checkExitPairs(merged, lines, errors);
-  checkUndecided(merged, clauses, lines, errors);
+  checkUndecided(merged, primary, lines, errors);
 
-  return { errors, hints, clauses, merged, working: renderWorkingCopy(merged) };
+  const all = withReversed(merged, marker, section, lines, errors);
+
+  return {
+    errors: unique(errors), hints, clauses, merged: all,
+    working: renderWorkingCopy(all)
+  };
+}
+
+// The reversed story follows the primary in the one list, after its Reversed
+// clause, so a reader of the merged story or the working copy meets both. A
+// story with reversible tokens but no Reversed clause is given one.
+function withReversed(merged, marker, section, lines, errors) {
+  const rules = merged.filter((c) => c.keyword !== "notes");
+  const notes = merged.filter((c) => c.keyword === "notes");
+  const flippable = hasReversible(rules);
+
+  if (marker && !section.some(said) && !flippable) {
+    errors.push(err(lineOf(marker), lines[lineOf(marker) - 1],
+      `"Reversed" has nothing to reverse. Add the clauses that differ under it, or mark direction words as [BUY], [SELL], [above] or [below].`));
+    return merged;
+  }
+  if (!marker && !flippable) return merged;
+
+  const reversed = reverse(rules, section);
+  checkAlternates(reversed, lines, errors);
+  checkExitPairs(reversed, lines, errors);
+  checkUndecided(reversed, section, lines, errors);
+  checkDirection(rules, reversed, marker, lines, errors);
+
+  const own = marker
+    ? { ...marker, source: "story" }
+    : { keyword: "reversed", raw: "Reversed", column: null, source: "story",
+        predicate: [{ text: "", line: null, opensWithKeyword: false }] };
+
+  return rules.concat([own], reversed, notes);
+}
+
+// The reversed story takes the opposite direction, so a Then that reads the
+// same in both has not been reversed. A primary with no Then is reported as
+// missing already.
+function checkDirection(primary, reversed, marker, lines, errors) {
+  const then = (list) => list
+    .filter((c) => c.keyword === "then")
+    .map((c) => c.predicate.map((p) => p.text).join("\n"))
+    .join("\n");
+
+  if (then(primary) === "" || then(primary) !== then(reversed)) return;
+
+  const line = marker ? lineOf(marker) : null;
+  errors.push(err(line, line ? lines[line - 1] : null,
+    `"Then" is the same in the reversed story. Put a "Then" under "Reversed", or write the direction as [BUY] or [SELL].`));
+}
+
+// The reversed story inherits the primary's clauses, so a check run on both
+// reports an inherited fault twice, on the same line with the same words.
+function unique(errors) {
+  const seen = new Set();
+  return errors.filter((e) => {
+    const key = `${e.line}|${e.message}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function findTab(lines) {
@@ -185,8 +269,8 @@ function resolveAnd(clauses, lines, errors) {
   }
 }
 
-function checkCardinality(clauses, lines, errors) {
-  for (const name of AT_MOST_ONE) {
+function checkCardinality(clauses, names, lines, errors) {
+  for (const name of names) {
     const found = clauses.filter((c) => c.keyword === name);
     for (const extra of found.slice(1)) {
       errors.push(err(lineOf(extra), lines[lineOf(extra) - 1],
@@ -296,14 +380,14 @@ if (process.argv[1] && process.argv[1].endsWith("verify.js")) {
   // The settings a story draws on and the working copies written as it is
   // checked belong to the project the story is in — the working directory. That
   // is the product itself when run standalone, and the host project when this
-  // runs inside a plugin.
-  const root = process.cwd();
+  // runs inside a plugin. stories-folder.js finds its stories folder.
+  const stories = storiesFolder();
   const result = verify(readFileSync(path, "utf8"), {
-    settingsDir: join(root, "stories", ".settings")
+    settingsDir: settingsFolder(stories)
   });
 
   if (result.working) {
-    const workingDir = join(root, ".working", "stories");
+    const workingDir = workingFolder(stories);
     mkdirSync(workingDir, { recursive: true });
     writeFileSync(join(workingDir, basename(path)), result.working);
   }

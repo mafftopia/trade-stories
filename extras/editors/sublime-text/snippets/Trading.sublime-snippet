@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[Trading     ${1:What instrument/market and timeframe is this for?}]]></content>
+  <tabTrigger>trading</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What instrument/market and timeframe is this for?</description>
+</snippet>

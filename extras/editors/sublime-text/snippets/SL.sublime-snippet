@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  SL        ${1:Where's the stop-loss?}]]></content>
+  <tabTrigger>sl</tabTrigger>
+  <scope>source.trade</scope>
+  <description>Where's the stop-loss?</description>
+</snippet>

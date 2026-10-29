@@ -49,10 +49,12 @@ Do all of this silently — print nothing for it.
 
 ## Lint
 
-Print `Checking style`, then apply every rule in
+Read `${CLAUDE_SKILL_DIR}/../../../dsl/syntax-rules.md` in full, silently. Then
+print `Checking style`, and apply every rule in
 `${CLAUDE_SKILL_DIR}/../../../dsl/lint-rules.md` and
 `${CLAUDE_SKILL_DIR}/../../../dsl/lint-rules-interview.md` to the **merged**
-clauses in `merged`. Those two files hold the rules between them. Never suggest
+clauses in `merged`, by the syntax `syntax-rules.md` defines. Those two files
+hold the rules between them. Never suggest
 editing the story to fix something the defaults supplied.
 
 Read `stories/.settings/lint-overrides.md` if it exists. A rule listed there

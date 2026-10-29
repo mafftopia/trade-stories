@@ -1,0 +1,7 @@
+<snippet>
+  <content><![CDATA[Notes:
+  ${1:What context helps a reader, without being acted on?}]]></content>
+  <tabTrigger>notes</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What context helps a reader, without being acted on?</description>
+</snippet>

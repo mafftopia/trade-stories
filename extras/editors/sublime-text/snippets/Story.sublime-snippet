@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[Story       ${1:What are you calling this setup?}]]></content>
+  <tabTrigger>story</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What are you calling this setup?</description>
+</snippet>

@@ -1,0 +1,19 @@
+<snippet>
+  <content><![CDATA[Story       ${1:What are you calling this setup?}
+Trading     ${2:What instrument/market and timeframe is this for?}
+
+  Given     ${3:What must already be true for the trade to be considered?}
+  When      ${4:What event or signal triggers entry?}
+  Then      ${5:What action does the trade take?}
+  With      ${6:What's the position size? Fixed amount or %? Any leverage?}
+  SL        ${7:Where's the stop-loss?}
+  Until     ${8:What level (or self-contained set of levels) should the trade be closed at?}
+  Taking    ${9:How much profit to take at each level?}
+
+Notes:
+  ${10:What context helps a reader, without being acted on?}
+]]></content>
+  <tabTrigger>newstory</tabTrigger>
+  <scope>source.trade</scope>
+  <description>A new Trade Story: the mandatory clauses and Notes</description>
+</snippet>

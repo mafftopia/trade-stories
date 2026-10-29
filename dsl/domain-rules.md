@@ -38,7 +38,7 @@ Some domain-level details for each clause:
 a setup reads — including a series plotted from a built-in library, such as
 `ta.ema()`.
 
-`When` - the entry trigger. If there are several `When`/`And` clauses stacked, all of the conditions in the stack must be true. There is no alternative "or" entry trigger — a second way into the trade belongs in its own story.
+`When` - the entry trigger. If there are several `When`/`And` clauses stacked, all of the conditions in the stack must be true. There is no alternative "Or when" clause - When clauses are not OR-stackable. An alternative When condition should be done as a separate story.
 
 `Taking` counts in shares of the position as opened. Each complemented exit is
 self-contained and accounts for the whole position on its own; shares are never
@@ -88,17 +88,15 @@ rest — a trailing stop, further tranches. An unaccounted remainder is an error
 leverage, so the stop price is indeterminate rather than merely debatable. ROI
 conventionally means return on margin, so that resolves.
 
-A `Source` clause must name only what the story uses. A source listed there but
-appearing nowhere else in the story is an error — the list has to match the
-setup. The converse is not an error: a source the story uses need not be listed
-in a `Source` clause.
-
 ## What might APPEAR to make a story unusable but is actually OK
 
 A clause asking for something of the chart rather than of the market — an
 indicator being present, say — is not unusable. It is satisfied before the
 strategy runs rather than by it, so the strategy carries no test for it and none
 is missing.
+
+A `Source` entry no other clause uses is not unusable either: nothing has to be
+coded for it. Lint flags it (`unused-source` in `lint-rules.md`).
 
 Whether a setup is any good is not a question the DSL answers.
 
@@ -134,6 +132,27 @@ with no text. How each kind merges:
 
 Checks run against the merged result, so a required clause supplied by a default
 counts as present.
+
+## Reversed
+
+A story may carry the mirror-image trade as well: the Reversed section
+(`syntax-rules.md` gives its shape). The story above it is the **primary**, and
+is the template. The **reversed story** is the primary with each clause the
+section supplies replacing the primary's clause of that keyword, and with every
+reversible token flipped — `[BUY]`↔`[SELL]`, `[above]`↔`[below]`.
+
+- A stack replaces the whole stack it stands for. Complement pairs under
+  `Reversed` replace all of the primary's; none there, the primary's are kept.
+- Defaults merge into the primary, and the reversed story inherits the result.
+  Nothing under `Reversed` is filled from `defaults.trade`, so an `Until` there
+  needs its own `Taking`; and `defaults.trade` may not hold a `Reversed` section.
+- An empty clause under `Reversed` says nothing, and the primary's stands.
+- A story is reversed when it has a `Reversed` clause, or a reversible token in
+  any Rule. `Reversed` with nothing under it and no token in the story has
+  nothing to reverse, and is an error.
+- The reversed story takes the opposite direction: a primary that buys is
+  reversed to sell. A `Then` that reads the same in both is an error.
+- `Notes` belongs to both.
 
 ## Timeframes
 

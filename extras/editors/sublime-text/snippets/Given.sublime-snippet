@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Given     ${1:What must already be true for the trade to be considered?}]]></content>
+  <tabTrigger>given</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What must already be true for the trade to be considered?</description>
+</snippet>

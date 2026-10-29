@@ -14,15 +14,16 @@ refer to them.
 
 ### both-directions
 
-**When** One story covers both a long and a short. `Then` naming both
-directions, "respectively", or any clause branching on direction.
+**When** One story covers both a long and a short in one set of clauses — `Then`
+naming both directions, "respectively", or any clause branching on direction.
+The `Reversed` section is where the other direction is written.
 
 **Warn** This story trades both directions. Backtest results will blend two
 different setups.
 
 **Because** An uptrending sample flatters the long side and punishes the short,
-so the numbers end up describing the market rather than the setup. Split it into
-one story per direction.
+so the numbers end up describing the market rather than the setup. Put the other
+direction under `Reversed`, or in a story of its own.
 
 ### chart-requirement
 
@@ -63,3 +64,37 @@ reader could take it differently.
 **Because** A convention is not a statement. Two runs can apply it differently,
 so the same story can produce two strategies that behave alike in most bars and
 differ where it matters.
+
+### opening-stop-beyond-price
+
+**When** The opening stop isn't an offset from the entry price (a fixed price,
+an indicator's value, a swing low), and the story's conditions let it sit at
+the entry price or beyond it: above the entry for a long, below it for a short.
+Read the `Given`, `When` and every other condition together to decide where it
+can sit at entry. A stop at a fixed offset on the losing side of the entry gets
+no warning, and neither does a level the conditions keep on the losing side. A
+stop the story puts beyond the price on every trade is an error, not this.
+
+**Warn** `<clause>` can put the stop beyond the entry price, so the trade is
+stopped out as soon as it opens. Add a fallback stop for when the level is at
+or beyond the entry price.
+
+**Because** The backtest counts those trades and their fees among the setup's
+results, though the setup never held them.
+
+### moved-stop-beyond-price
+
+**When** The story moves the stop once a condition is met, and that condition
+doesn't make sure the price is already further into profit than the new stop
+when it moves. `once in profit, move SL to 2% above entry` warns, because a
+long 1% in profit has its stop moved above the price. `once price is 3% above
+entry, move SL to 2% above entry` doesn't, and neither does a move to entry
+once in profit. A move the story puts beyond the price every time it's made is
+an error, not this.
+
+**Warn** `<clause>` can move the stop beyond the price, so the trade is stopped
+out as soon as the stop moves. Make the move only once the price is further
+into profit than the new stop.
+
+**Because** A move meant to protect a winner ends it instead, at whatever
+profit it had.

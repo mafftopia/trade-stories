@@ -2,6 +2,8 @@
 name: story-writer
 description: Compose and write the Trade Story file from the answers /write-story has already collected. Invoked by /write-story, and reports back to it rather than to the trader.
 tools: Read, Bash, Write, Edit
+effort: high
+maxTurns: 25
 ---
 
 # Write the story file

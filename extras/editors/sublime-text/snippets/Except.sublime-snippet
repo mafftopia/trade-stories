@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Except    ${1:What invalidates entry even if the trigger fires?}]]></content>
+  <tabTrigger>except</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What invalidates entry even if the trigger fires?</description>
+</snippet>

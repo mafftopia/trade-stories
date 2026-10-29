@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[Source      ${1:Which indicators, chart patterns or plotted series does the setup use?}]]></content>
+  <tabTrigger>source</tabTrigger>
+  <scope>source.trade</scope>
+  <description>Which indicators, chart patterns or plotted series does the setup use?</description>
+</snippet>

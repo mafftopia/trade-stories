@@ -23,9 +23,19 @@ has no question to ask.
 
 ## Paths
 
-Trade Stories' own files are everything under `dsl/`, `.claude/` and `extras/`;
-the trader's files — `stories/` and `.working/` — are relative to the working
-directory.
+Trade Stories' own files are everything under `dsl/`, `.claude/` and `extras/`.
+The trader's files are in the stories folder of the project in the working
+directory. That is the first of `stories/`, then `trader/stories/`, then the
+shallowest `stories/` folder below, never one inside a folder whose name starts
+with `.`. Before reading or writing a trader's file, run this from the working
+directory, which prints the folder:
+
+```
+node "<Trade Stories directory>/dsl/src/stories-folder.js"
+```
+
+Wherever these files write `stories/`, they mean that folder, and `.working/`
+means the `.working/` folder beside it.
 
 A skill is given ready-to-use paths for its own files, so they resolve wherever
 Trade Stories is installed. An agent is handed the Trade Stories directory and

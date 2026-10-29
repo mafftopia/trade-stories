@@ -1,0 +1,59 @@
+#!/bin/zsh -l
+# BBEdit script: runs the mechanical verify checks on the front document and
+# lists the errors in a results window, each one a click from its line.
+#
+# Needs Node on the login shell's PATH, and a trade-stories checkout: the one
+# the story sits inside, or the folder named by TRADE_STORIES_DIR.
+
+alert() {
+  osascript -e 'on run argv' \
+            -e 'display alert "Verify Trade Story" message (item 1 of argv)' \
+            -e 'end run' -- "$1"
+}
+
+story="$BB_DOC_PATH"
+if [[ -z "$story" ]]; then
+  alert "Save the story first, so there is a file to check."
+  exit 1
+fi
+
+checkout=""
+dir="$(dirname "$story")"
+while [[ "$dir" != "/" ]]; do
+  if [[ -f "$dir/dsl/src/verify.js" ]]; then
+    checkout="$dir"
+    break
+  fi
+  dir="$(dirname "$dir")"
+done
+if [[ -z "$checkout" && -f "$TRADE_STORIES_DIR/dsl/src/verify.js" ]]; then
+  checkout="$TRADE_STORIES_DIR"
+fi
+if [[ -z "$checkout" ]]; then
+  alert "Can't find trade-stories above this story. Set TRADE_STORIES_DIR in your shell profile to the trade-stories folder."
+  exit 1
+fi
+
+node="$(command -v node)"
+if [[ -z "$node" ]]; then
+  for candidate in /opt/homebrew/bin/node /usr/local/bin/node "$HOME"/.nvm/versions/node/*/bin/node(N); do
+    [[ -x "$candidate" ]] && node="$candidate"
+  done
+fi
+if [[ -z "$node" ]]; then
+  alert "Can't find node. Install Node.js, or put it on the PATH your login shell sets."
+  exit 1
+fi
+
+results="$(command -v bbresults || print /usr/local/bin/bbresults)"
+
+report="$("$node" "$checkout/extras/editors/verify-report.js" "$story" 2>&1)"
+status=$?
+
+if (( status == 0 )); then
+  osascript -e 'display notification "No errors." with title "Verify Trade Story"'
+elif [[ -x "$results" ]]; then
+  print -r -- "$report" | "$results"
+else
+  alert "$report"
+fi

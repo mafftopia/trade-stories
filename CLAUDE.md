@@ -4,8 +4,6 @@ Trade Stories: a semi-prescriptive DSL for trade setups, and the checks that
 find errors in them. Mostly natural language, formal enough for an agent to
 parse and act on.
 
-Writing and checking stories needs Node and nothing else.
-
 ## Opening a session
 
 When the trader's first message does not name a skill or a story, tell them what
@@ -16,11 +14,12 @@ something specific.
 
 ## The skills
 
-| Skill | What it does |
-|-------|--------------|
-| `/write-story` | Asks a trader through a setup and writes the story |
-| `/verify-story` | Structural and trade-setup errors |
-| `/lint-story` | Style and trade-design warnings |
+| Skill                | What it does                                         |
+|----------------------|------------------------------------------------------|
+| `/write-story`       | Asks a trader through a setup and writes the story   |
+| `/verify-story`      | Structural and trade-setup errors                    |
+| `/lint-story`        | Style and trade-design warnings                      |
+| `/indicator-details` | An indicator's notes, or the indicators with notes   |
 
 ## Where things are
 

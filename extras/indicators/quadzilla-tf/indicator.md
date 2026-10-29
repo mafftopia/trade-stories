@@ -9,9 +9,9 @@ Traders can get the Quadzilla suite by joining the SWC Discord and following a c
 
 ### For AI Agents
 
-Unlike most indicators, quadzilla-tf consists of several plot series and signals. They're designed to complement each other; one acts as either a confirmation or an invalidation of another.
+Quadzilla-tf consists of several plot series and signals. They're designed to complement each other; one acts as either a confirmation or an invalidation of another.
 
-The following sections describe each one:
+The following sections describe each one.
 
 #### Retracements
 
@@ -55,6 +55,36 @@ When placing a trade, the trend should always be taken into account: e.g. a stro
 
 Several Retracements can be plotted simultaneously, marking out different price levels. The ones that are closest to the price have the highest probability of being reached.
 
+In TradingView, the Bearish retracements are plotted from a pool of 8 (2x4) series:
+
+BearRet A step 2
+BearRet B step 2
+BearRet C step 2
+BearRet D step 2
+
+BearRet A step 3
+BearRet B step 3
+BearRet C step 3
+BearRet D step 3
+
+Same for the Bullish retracements:
+
+BullRet A step 2
+BullRet B step 2
+BullRet C step 2
+BullRet D step 2
+
+BullRet A step 3
+BullRet B step 3
+BullRet C step 3
+BullRet D step 3
+
+There's no "step 1" as the indicator doesn't plot step 1 - the levels are detected exactly where step 2 begins.
+
+When a new retracement is being plotted, it takes the next available series from the respective pool. So the series value goes from na to the price at which the retracement level is being plotted.
+
+Quadzilla-TF also plots "Bear Retracement Started", "Bull Retracement Started" and "Retracement Hit" series, but these are intended for traders to create alerts within TradingView.
+
 
 ### Fair Value Levels
 
@@ -68,6 +98,16 @@ If the price is between an FV and its "parent" bullish Retracement below, the pr
 
 If the price is between an FV and its "parent" bearish Retracement above, the price is considered to be in the "premium zone" - it's more expensive, and so likely to correct to the downside, eventually dropping below the FV which is acting as support.
 
+In TradingView, the FV levels are plotted from a pool of 4 series:
+
+FV A
+FV B
+FV C
+FV D
+
+When a new FV level is being plotted, it takes the next available series from its pool. So the series value goes from na to the price at which the FV level is being plotted.
+
+
 ### Super Up and Super Down signals
 
 A Super Up signal fires during a single bar's duration (not necessarily at the close). It means that momentum has strongly moved into an oversold state, and has begun to turn back to the upside. The price typically follows this change in momentum to the upside.
@@ -78,8 +118,13 @@ In other words, a Super Up is a Buy signal, and Super Down is a Sell signal.
 
 As they're based on momentum stochastics, the Super signals are less reliable during a long-term trending market regime. They're very reliable in a ranging market regime.
 
+In TradingView, these signals are plotted as "Super Up" and "Super Down". Their value is na when the signal hasn't fired, and the close price on any bar where the signal fired.
+
+
 ### Stochastic Cross Up and Stochastic Cross Down signals
 
 These are very similar to Super Up and Super Down signals, in terms of what they represent and when they typically fire - and in terms of which market regime they're best suited to.
 
 The main difference is in the calculation that quadzilla-tf uses to detect them. They also tend to fire earlier and more often than the Super signals. The Super signals are marginally more accurate though.
+
+In TradingView, these signals are plotted as "Stochastic Cross Up" and "Stochastic Cross Down". Their value is na when the signal hasn't fired, and the close price on any bar where the signal fired.

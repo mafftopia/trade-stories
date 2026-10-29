@@ -1,0 +1,143 @@
+{
+  "scope": "source.trade",
+  "completions": [
+    {
+      "trigger": "Story",
+      "contents": "Story",
+      "kind": "keyword",
+      "details": "What are you calling this setup?"
+    },
+    {
+      "trigger": "Trading",
+      "contents": "Trading",
+      "kind": "keyword",
+      "details": "What instrument/market and timeframe is this for?"
+    },
+    {
+      "trigger": "Source",
+      "contents": "Source",
+      "kind": "keyword",
+      "details": "Which indicators, chart patterns or plotted series does the setup use?"
+    },
+    {
+      "trigger": "Sources",
+      "contents": "Sources",
+      "kind": "keyword",
+      "details": "Which indicators, chart patterns or plotted series does the setup use?"
+    },
+    {
+      "trigger": "Given",
+      "contents": "Given",
+      "kind": "keyword",
+      "details": "What must already be true for the trade to be considered?"
+    },
+    {
+      "trigger": "When",
+      "contents": "When",
+      "kind": "keyword",
+      "details": "What event or signal triggers entry?"
+    },
+    {
+      "trigger": "Then",
+      "contents": "Then",
+      "kind": "keyword",
+      "details": "What action does the trade take?"
+    },
+    {
+      "trigger": "With",
+      "contents": "With",
+      "kind": "keyword",
+      "details": "What's the position size? Fixed amount or %? Any leverage?"
+    },
+    {
+      "trigger": "Except",
+      "contents": "Except",
+      "kind": "keyword",
+      "details": "What invalidates entry even if the trigger fires?"
+    },
+    {
+      "trigger": "Or except",
+      "contents": "Or except",
+      "kind": "keyword",
+      "details": "What invalidates entry even if the trigger fires?"
+    },
+    {
+      "trigger": "And",
+      "contents": "And",
+      "kind": "keyword",
+      "details": "the next condition in this stack"
+    },
+    {
+      "trigger": "Until",
+      "contents": "Until",
+      "kind": "keyword",
+      "details": "What level (or self-contained set of levels) should the trade be closed at?"
+    },
+    {
+      "trigger": "Or until",
+      "contents": "Or until",
+      "kind": "keyword",
+      "details": "What level (or self-contained set of levels) should the trade be closed at?"
+    },
+    {
+      "trigger": "Taking",
+      "contents": "Taking",
+      "kind": "keyword",
+      "details": "How much profit to take at each level?"
+    },
+    {
+      "trigger": "SL",
+      "contents": "SL",
+      "kind": "keyword",
+      "details": "Where's the stop-loss?"
+    },
+    {
+      "trigger": "Unless",
+      "contents": "Unless",
+      "kind": "keyword",
+      "details": "What condition, arising early, exits before target?"
+    },
+    {
+      "trigger": "Or unless",
+      "contents": "Or unless",
+      "kind": "keyword",
+      "details": "What condition, arising early, exits before target?"
+    },
+    {
+      "trigger": "Reversed",
+      "contents": "Reversed",
+      "kind": "keyword",
+      "details": "Which clauses should be rewritten to allow for a flipped/reversed version of the trade?"
+    },
+    {
+      "trigger": "Reversed:",
+      "contents": "Reversed:",
+      "kind": "keyword",
+      "details": "Which clauses should be rewritten to allow for a flipped/reversed version of the trade?"
+    },
+    {
+      "trigger": "Reversal",
+      "contents": "Reversal",
+      "kind": "keyword",
+      "details": "Which clauses should be rewritten to allow for a flipped/reversed version of the trade?"
+    },
+    {
+      "trigger": "Reversal:",
+      "contents": "Reversal:",
+      "kind": "keyword",
+      "details": "Which clauses should be rewritten to allow for a flipped/reversed version of the trade?"
+    },
+    {
+      "trigger": "Notes",
+      "contents": "Notes",
+      "kind": "keyword",
+      "details": "What context helps a reader, without being acted on?"
+    },
+    {
+      "trigger": "Notes:",
+      "contents": "Notes:",
+      "kind": "keyword",
+      "details": "What context helps a reader, without being acted on?"
+    }
+  ]
+}

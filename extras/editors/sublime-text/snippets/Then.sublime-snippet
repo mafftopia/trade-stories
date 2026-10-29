@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Then      ${1:What action does the trade take?}]]></content>
+  <tabTrigger>then</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What action does the trade take?</description>
+</snippet>

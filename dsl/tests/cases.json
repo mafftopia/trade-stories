@@ -715,5 +715,205 @@
     "expect": "error",
     "contains": "\"Source\" clause is undecided.",
     "story": "Story x\nTrading BTC/USD 4H\nSource\nGiven ranging\nWhen cross up\nThen Go Long\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "a Reversed section lays its clauses over the primary",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross down\nThen        SELL\nWith        100 usdt\nSL          3% [above] entry\nUntil       10% [below] entry\nTaking      100% - close the position\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3% [below] entry\nUntil 10% [above] entry\nTaking 100% - close the position\n\nReversed:\n  When cross down\n  Then SELL\n"
+  },
+  {
+    "name": "the primary keeps its own text",
+    "expect": "ok",
+    "workingContains": "Then        BUY\nWith        100 usdt\nSL          3% [below] entry\nUntil       10% [above] entry\nTaking      100% - close the position\n\nReversed\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3% [below] entry\nUntil 10% [above] entry\nTaking 100% - close the position\n\nReversed:\n  When cross down\n  Then SELL\n"
+  },
+  {
+    "name": "pairs under Reversed replace every pair of the primary",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross up\nThen        [SELL]\nWith        100 usdt\nSL          3%\nUntil       5%\nTaking      100% - close the position\n",
+    "workingExcludes": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross up\nThen        [SELL]\nWith        100 usdt\nSL          3%\nUntil       5%\nTaking      100% - close the position\nOr Until",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen [BUY]\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 50%\nOr Until 20%\nTaking 100% - close the position\n\nReversed:\n  Until 5%\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "no pairs under Reversed keeps the primary's",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross down\nThen        SELL\nWith        100 usdt\nSL          3%\nUntil       10%\nTaking      50%\nOr Until    20%\nTaking      100% - close the position\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 50%\nOr Until 20%\nTaking 100% - close the position\n\nReversed:\n  When cross down\n  Then SELL\n"
+  },
+  {
+    "name": "a stack under Reversed replaces the whole stack",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       trending down\nWhen        cross down\nThen        SELL\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nAnd volume rising\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  Given trending down\n  When cross down\n  Then SELL\n"
+  },
+  {
+    "name": "a clause under Reversed the primary lacks is placed in order",
+    "expect": "ok",
+    "workingContains": "When        cross down\nExcept      if volume is thin\nThen        SELL\nWith        100 usdt\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  When cross down\n  Except if volume is thin\n  Then SELL\n"
+  },
+  {
+    "name": "tokens keep their case shape",
+    "expect": "ok",
+    "workingContains": "Then        [Sell]\nWith        100 usdt\nSL          3% [ABOVE] entry\nUntil       10% [below] entry\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen [Buy]\nWith 100 usdt\nSL 3% [BELOW] entry\nUntil 10% [above] entry\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "unrecognised bracketed text is not a token",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        a Super [Down] fires\nThen        [SELL]\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen a Super [Down] fires\nThen [BUY]\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "tokens alone make a reversed story",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross up\nThen        [SELL]\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen [BUY]\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "no Reversed and no token means no reversed story",
+    "expect": "ok",
+    "workingExcludes": "\nReversed\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "an empty Reversed with tokens in the story",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross up\nThen        [SELL]\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen [BUY]\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversed:\n"
+  },
+  {
+    "name": "an empty Reversed with no tokens has nothing to reverse",
+    "expect": "error",
+    "contains": "\"Reversed\" has nothing to reverse.",
+    "errorCount": 1,
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversed:\n"
+  },
+  {
+    "name": "a token in Notes is not a token",
+    "expect": "error",
+    "contains": "\"Reversed\" has nothing to reverse.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversed:\nNotes: [SELL] in the other case\n"
+  },
+  {
+    "name": "text on the Reversed line",
+    "expect": "error",
+    "contains": "\"Reversed\" must be alone on its line.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversed: the short side\n  Then SELL\n"
+  },
+  {
+    "name": "a second Reversed",
+    "expect": "error",
+    "contains": "Only one \"Reversed\" clause is allowed.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversed:\n  Then SELL\nReversed:\n  When cross down\n"
+  },
+  {
+    "name": "Reversal: is a synonym",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversal:\n  Then SELL\n"
+  },
+  {
+    "name": "reversed in lower case and without a colon",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nreversed\n  Then SELL\n"
+  },
+  {
+    "name": "Reversed: with text on its line is not a clause of another kind",
+    "expect": "error",
+    "contains": "\"Reversed\" must be alone on its line.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nReversal SELL\n"
+  },
+  {
+    "name": "an Until under Reversed gets no Taking from the defaults",
+    "expect": "error",
+    "contains": "\"Until\" must be followed by a \"Taking\".",
+    "errorCount": 1,
+    "defaults": "Taking 100% - close the position\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\n\nReversed:\n  Then SELL\n  Until 5%\n"
+  },
+  {
+    "name": "a default reaches the reversed story through the primary",
+    "expect": "ok",
+    "defaults": "With 100 usdt\n",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross down\nThen        SELL\nWith        100 usdt\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  When cross down\n  Then SELL\n"
+  },
+  {
+    "name": "an empty clause under Reversed means the primary's",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x\nTrading     BTC/USD 4H\nGiven       ranging\nWhen        cross up\nThen        SELL\nWith        100 usdt\nSL          3%\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  Then SELL\n  SL\n"
+  },
+  {
+    "name": "TBD under Reversed is an error",
+    "expect": "error",
+    "contains": "\"When\" clause is still TBD.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  When TBD\n  Then SELL\n"
+  },
+  {
+    "name": "the section orders as a story does",
+    "expect": "error",
+    "contains": "\"When\" must come before \"Then\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  Then SELL\n  When cross down\n"
+  },
+  {
+    "name": "an And at the top of the section has nothing to follow",
+    "expect": "error",
+    "contains": "\"And\" must follow",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  And volume falling\n  Then SELL\n"
+  },
+  {
+    "name": "an Or Until under Reversed needs its own Until",
+    "expect": "error",
+    "contains": "\"Or Until\" must come after \"Until\".",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  Then SELL\n  Or Until 5%\n  Taking 100% - close the position\n"
+  },
+  {
+    "name": "a Then the section leaves unchanged",
+    "expect": "error",
+    "contains": "\"Then\" is the same in the reversed story.",
+    "errorCount": 1,
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  When cross down\n"
+  },
+  {
+    "name": "a token elsewhere with a bare Then",
+    "expect": "error",
+    "contains": "\"Then\" is the same in the reversed story.",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3% [below] entry\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "an inherited fault is reported once",
+    "expect": "error",
+    "contains": "\"Until\" must be followed by a \"Taking\".",
+    "errorCount": 1,
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\n\nReversed:\n  Then SELL\n"
+  },
+  {
+    "name": "Reversed in the defaults file",
+    "expect": "error",
+    "contains": "\"Reversed\" has no place in defaults.trade.",
+    "defaults": "SL 3%\nReversed:\nThen SELL\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nUntil 10%\nTaking 100% - close the position\n"
+  },
+  {
+    "name": "Reversed after Notes is notes",
+    "expect": "ok",
+    "workingExcludes": "\nReversed\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\nNotes:\nReversed:\n  Then SELL\n"
+  },
+  {
+    "name": "Story overridden under Reversed",
+    "expect": "ok",
+    "workingContains": "\nReversed\nStory       x, short side\nTrading     BTC/USD 4H\n",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n\nReversed:\n  Story x, short side\n  Then SELL\n"
+  },
+  {
+    "name": "a continuation opening with Reversed is a hint",
+    "expect": "ok",
+    "hintContains": "continuation text of \"Taking\"",
+    "story": "Story x\nTrading BTC/USD 4H\nGiven ranging\nWhen cross up\nThen BUY\nWith 100 usdt\nSL 3%\nUntil 10%\nTaking 100% - close the position\n            Reversed: no\n"
   }
 ]

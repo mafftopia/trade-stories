@@ -1,0 +1,13 @@
+Story       <#What are you calling this setup?#>
+Trading     <#What instrument/market and timeframe is this for?#>
+
+  Given     <#What must already be true for the trade to be considered?#>
+  When      <#What event or signal triggers entry?#>
+  Then      <#What action does the trade take?#>
+  With      <#What's the position size? Fixed amount or %? Any leverage?#>
+  SL        <#Where's the stop-loss?#>
+  Until     <#What level (or self-contained set of levels) should the trade be closed at?#>
+  Taking    <#How much profit to take at each level?#>
+
+Notes:
+  <#What context helps a reader, without being acted on?#>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>BBEditDocumentType</key>
+  <string>CodelessLanguageModule</string>
+  <key>BBLMLanguageDisplayName</key>
+  <string>Trade Stories</string>
+  <key>BBLMLanguageCode</key>
+  <string>TrSt</string>
+  <key>BBLMColorsSyntax</key>
+  <true/>
+  <key>BBLMIsCaseSensitive</key>
+  <false/>
+  <key>BBLMSupportsTextCompletion</key>
+  <true/>
+  <key>BBLMCanSpellCheckCodeRuns</key>
+  <true/>
+  <key>BBLMScansFunctions</key>
+  <true/>
+  <key>BBLMCommentLineDefault</key>
+  <string>#</string>
+  <key>BBLMPreferredFilenameExtension</key>
+  <string>trade</string>
+  <key>BBLMReferenceSearchURLTemplate</key>
+  <string>https://mafftopia.com/trade-stories-dsl</string>
+  <key>BBLMSuffixMap</key>
+  <array>
+    <dict>
+      <key>BBLMLanguageSuffix</key>
+      <string>.trade</string>
+    </dict>
+  </array>
+  <key>BBLMNonSpellableRunKinds</key>
+  <array>
+    <string>com.barebones.bblm.keyword</string>
+  </array>
+  <key>Language Features</key>
+  <dict>
+    <key>Identifier and Keyword Character Class</key>
+    <string>A-Za-z0-9_</string>
+    <key>Open Line Comments</key>
+    <string>#</string>
+    <key>Comment Pattern</key>
+    <string><![CDATA[(?ix)
+(?: ^[ ]*\#[^\r\n]* )
+|
+(?: ^[ ]{0,10}Notes:?(?=[ ]|$)(?s:.*) )
+]]></string>
+    <key>String Pattern</key>
+    <string><![CDATA[(?ix)
+\[(?:buy|sell|above|below)\]
+]]></string>
+    <key>Keyword Pattern</key>
+    <string><![CDATA[(?ix)
+^[ ]{0,10}
+(?:
+  Or[ ]+except|Or[ ]+unless|Reversal:|Reversed:|Or[ ]+until|Reversal|
+  Reversed|Sources|Trading|Except|Notes:|Source|Taking|Unless|Given|Notes|
+  Story|Until|Then|When|With|And|SL
+)
+(?=[ ]|$)
+]]></string>
+    <key>Function Pattern</key>
+    <string><![CDATA[(?xi)
+(?P<function>
+  ^[ ]{0,10}
+  (?P<function_name>
+    (?:
+      (?P<notes>Notes:|Notes)
+      |
+      Or[ ]+except|Or[ ]+unless|Reversal:|Reversed:|Or[ ]+until|Reversal|
+      Reversed|Sources|Trading|Except|Source|Taking|Unless|Given|Story|Until|
+      Then|When|With|And|SL
+    )
+    (?=[ ]|$)[^\r\n]*?
+  )[ ]*$
+  (?(notes)
+    (?s:.*)
+  |
+    (?: \r?\n (?: [ ]{11,}[^\r\n]* | [ ]*\#[^\r\n]* | [ ]*(?=\r?\n|\z) ) )*
+  )
+)
+]]></string>
+    <key>Skip Pattern</key>
+    <string><![CDATA[(?P>comment)]]></string>
+  </dict>
+</dict>
+</plist>

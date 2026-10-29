@@ -2,6 +2,8 @@
 name: new-story-reviewer
 description: Check a Trade Story that /write-story has just written, before the trader sees it. Runs the checks verify-story and lint-story would, and reports rather than fixes.
 tools: Read, Grep, Glob, Bash
+effort: high
+maxTurns: 25
 ---
 
 # Review a newly written Trade Story
@@ -63,8 +65,9 @@ behind each. A clause holding an answer to a different keyword's question is a
 `merged` against **What makes a story unusable** in `dsl/domain-rules.md`. Each
 one that fails is an **Ask**.
 
-**Style and trade design.** Apply every rule in `dsl/lint-rules.md` and
-`dsl/lint-rules-interview.md` to the merged clauses, honouring
+**Style and trade design.** Read `dsl/syntax-rules.md` in full, then apply
+every rule in `dsl/lint-rules.md` and `dsl/lint-rules-interview.md` to the
+merged clauses, by the syntax `syntax-rules.md` defines, honouring
 `stories/.settings/lint-overrides.md`. Each warning is an **Ask**, or
 **Expected** where the log shows the trader already decided against the advice.
 

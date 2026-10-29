@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[  Or unless ${1:What condition, arising early, exits before target?}]]></content>
+  <tabTrigger>orunless</tabTrigger>
+  <scope>source.trade</scope>
+  <description>What condition, arising early, exits before target?</description>
+</snippet>
